@@ -1,61 +1,516 @@
-function showLoginError(message) {
-  const errorElement =
-    document.getElementById(
-      "loginError"
-    );
+const ADVISORFLOW_REMEMBERED_EMAIL =
+  "advisorflowRememberedEmail";
 
-  if (!errorElement) {
-    return;
-  }
+const ADVISORFLOW_USER_NAME =
+  "userName";
 
-  errorElement.textContent =
-    message ?? "";
+const ADVISORFLOW_USER_EMAIL =
+  "userEmail";
+
+const ADVISORFLOW_USER_ROLE =
+  "userRole";
+
+const ALLOWED_RETURN_PAGES =
+  new Set([
+    "dashboard.html",
+    "client.html",
+    "client_details.html",
+    "meeting.html",
+    "partner.html"
+  ]);
+
+
+function loginElement(id) {
+  return document.getElementById(id);
 }
 
 
-function setLoginLoading(
-  isLoading
+function showLoginMessage(
+  message,
+  type = "error"
 ) {
-  const button =
-    document.getElementById(
-      "loginButton"
-    );
+  const element =
+    type === "error"
+      ? loginElement("loginError")
+      : loginElement("loginNotice");
 
-  if (!button) {
+  if (!element) {
     return;
   }
 
-  button.disabled = isLoading;
+  element.textContent =
+    message ?? "";
 
-  button.textContent =
-    isLoading
-      ? "Signing in..."
-      : "Login";
+  element.className =
+    `auth-message ${type}`;
+
+  element.hidden =
+    !message;
 }
 
 
-async function handleLogin(
+function clearLoginMessages() {
+  const errorElement =
+    loginElement("loginError");
+
+  const noticeElement =
+    loginElement("loginNotice");
+
+  if (errorElement) {
+    errorElement.textContent = "";
+    errorElement.hidden = true;
+  }
+
+  if (noticeElement) {
+    noticeElement.textContent = "";
+    noticeElement.hidden = true;
+  }
+}
+
+
+function saveUserDisplayData(user) {
+  localStorage.setItem(
+    ADVISORFLOW_USER_NAME,
+    user.display_name
+  );
+
+  localStorage.setItem(
+    ADVISORFLOW_USER_EMAIL,
+    user.email
+  );
+
+  localStorage.setItem(
+    ADVISORFLOW_USER_ROLE,
+    user.role
+  );
+}
+
+
+function getSafeNextPage() {
+  const parameters =
+    new URLSearchParams(
+      window.location.search
+    );
+
+  const nextValue =
+    parameters.get("next");
+
+  if (!nextValue) {
+    return "dashboard.html";
+  }
+
+  try {
+    const targetUrl =
+      new URL(
+        nextValue,
+        window.location.origin
+      );
+
+    if (
+      targetUrl.origin !==
+      window.location.origin
+    ) {
+      return "dashboard.html";
+    }
+
+    const segments =
+      targetUrl.pathname
+        .split("/")
+        .filter(Boolean);
+
+    const pageName =
+      segments.at(-1);
+
+    if (
+      !pageName ||
+      !ALLOWED_RETURN_PAGES.has(
+        pageName
+      )
+    ) {
+      return "dashboard.html";
+    }
+
+    return (
+      pageName
+      + targetUrl.search
+      + targetUrl.hash
+    );
+
+  } catch (error) {
+    return "dashboard.html";
+  }
+}
+
+
+function showLoginReason() {
+  const parameters =
+    new URLSearchParams(
+      window.location.search
+    );
+
+  const reason =
+    parameters.get("reason");
+
+  const messages = {
+    logged_out: (
+      "You have signed out successfully."
+    ),
+
+    session_expired: (
+      "Your session expired. Sign in again to continue."
+    ),
+
+    login_required: (
+      "Please sign in before opening that page."
+    ),
+
+    already_logged_out: (
+      "Your AdvisorFlow session is no longer active."
+    )
+  };
+
+  if (
+    reason &&
+    messages[reason]
+  ) {
+    const type =
+      reason === "logged_out"
+        ? "success"
+        : "info";
+
+    showLoginMessage(
+      messages[reason],
+      type
+    );
+  }
+}
+
+
+function setLoginLoading(isLoading) {
+  const button =
+    loginElement("loginButton");
+
+  const buttonText =
+    loginElement(
+      "loginButtonText"
+    );
+
+  const spinner =
+    loginElement(
+      "loginButtonSpinner"
+    );
+
+  const emailInput =
+    loginElement("email");
+
+  const passwordInput =
+    loginElement("password");
+
+  const demoButton =
+    loginElement(
+      "useDemoAccountButton"
+    );
+
+  if (button) {
+    button.disabled =
+      isLoading;
+  }
+
+  if (buttonText) {
+    buttonText.textContent =
+      isLoading
+        ? "Signing In..."
+        : "Sign In";
+  }
+
+  if (spinner) {
+    spinner.hidden =
+      !isLoading;
+  }
+
+  if (emailInput) {
+    emailInput.disabled =
+      isLoading;
+  }
+
+  if (passwordInput) {
+    passwordInput.disabled =
+      isLoading;
+  }
+
+  if (demoButton) {
+    demoButton.disabled =
+      isLoading;
+  }
+}
+
+
+function updateBackendStatus(
+  state,
+  message
+) {
+  const statusElement =
+    loginElement(
+      "backendStatus"
+    );
+
+  if (!statusElement) {
+    return;
+  }
+
+  statusElement.className =
+    `auth-service-status ${state}`;
+
+  statusElement.replaceChildren();
+
+  const statusDot =
+    document.createElement("span");
+
+  const statusText =
+    document.createTextNode(
+      message
+    );
+
+  statusElement.append(
+    statusDot,
+    statusText
+  );
+}
+
+
+async function checkBackendStatus() {
+  updateBackendStatus(
+    "checking",
+    "Checking service"
+  );
+
+  try {
+    const result =
+      await apiRequest("/health");
+
+    if (
+      result?.status === "healthy"
+      && result?.database
+        === "connected"
+    ) {
+      updateBackendStatus(
+        "online",
+        "Service online"
+      );
+
+      return;
+    }
+
+    updateBackendStatus(
+      "offline",
+      "Service unavailable"
+    );
+
+  } catch (error) {
+    updateBackendStatus(
+      "offline",
+      "Service unavailable"
+    );
+  }
+}
+
+
+function loadRememberedEmail() {
+  const emailInput =
+    loginElement("email");
+
+  const rememberCheckbox =
+    loginElement(
+      "rememberEmail"
+    );
+
+  const rememberedEmail =
+    localStorage.getItem(
+      ADVISORFLOW_REMEMBERED_EMAIL
+    );
+
+  if (
+    emailInput &&
+    rememberedEmail
+  ) {
+    emailInput.value =
+      rememberedEmail;
+
+    rememberCheckbox.checked =
+      true;
+  }
+}
+
+
+function updateRememberedEmail(
+  email
+) {
+  const rememberCheckbox =
+    loginElement(
+      "rememberEmail"
+    );
+
+  if (
+    rememberCheckbox?.checked
+  ) {
+    localStorage.setItem(
+      ADVISORFLOW_REMEMBERED_EMAIL,
+      email
+    );
+  } else {
+    localStorage.removeItem(
+      ADVISORFLOW_REMEMBERED_EMAIL
+    );
+  }
+}
+
+
+function togglePasswordVisibility() {
+  const passwordInput =
+    loginElement("password");
+
+  const toggleButton =
+    loginElement(
+      "togglePasswordButton"
+    );
+
+  if (
+    !passwordInput ||
+    !toggleButton
+  ) {
+    return;
+  }
+
+  const shouldShow =
+    passwordInput.type
+    === "password";
+
+  passwordInput.type =
+    shouldShow
+      ? "text"
+      : "password";
+
+  toggleButton.textContent =
+    shouldShow
+      ? "Hide"
+      : "Show";
+
+  toggleButton.setAttribute(
+    "aria-label",
+    shouldShow
+      ? "Hide password"
+      : "Show password"
+  );
+
+  toggleButton.setAttribute(
+    "aria-pressed",
+    String(shouldShow)
+  );
+
+  passwordInput.focus();
+}
+
+
+function updateCapsLockWarning(
   event
 ) {
+  const warning =
+    loginElement(
+      "capsLockWarning"
+    );
+
+  if (!warning) {
+    return;
+  }
+
+  warning.hidden =
+    !event.getModifierState(
+      "CapsLock"
+    );
+}
+
+
+function fillDemoAccount() {
+  const emailInput =
+    loginElement("email");
+
+  const passwordInput =
+    loginElement("password");
+
+  if (
+    !emailInput ||
+    !passwordInput
+  ) {
+    return;
+  }
+
+  clearLoginMessages();
+
+  emailInput.value =
+    "alex@advisorflow.com";
+
+  passwordInput.value =
+    "advisor123";
+
+  loginElement(
+    "rememberEmail"
+  ).checked = true;
+
+  showLoginMessage(
+    "Demo account details have been filled in. Select Sign In to continue.",
+    "info"
+  );
+
+  passwordInput.focus();
+}
+
+
+function getLoginCredentials() {
+  const emailInput =
+    loginElement("email");
+
+  const passwordInput =
+    loginElement("password");
+
+  return {
+    email: (
+      emailInput.value
+        .trim()
+        .toLowerCase()
+    ),
+
+    password:
+      passwordInput.value
+  };
+}
+
+
+async function handleLogin(event) {
   event.preventDefault();
 
-  const email =
-    document
-      .getElementById("email")
-      .value
-      .trim()
-      .toLowerCase();
+  const form =
+    event.currentTarget;
 
-  const password =
-    document
-      .getElementById("password")
-      .value;
+  clearLoginMessages();
 
-  showLoginError("");
+  if (!form.reportValidity()) {
+    showLoginMessage(
+      "Check your email and password, then try again.",
+      "error"
+    );
+
+    return;
+  }
+
+  const {
+    email,
+    password
+  } = getLoginCredentials();
 
   if (!email || !password) {
-    showLoginError(
-      "Please enter your email and password."
+    showLoginMessage(
+      "Enter your email and password.",
+      "error"
     );
 
     return;
@@ -70,29 +525,56 @@ async function handleLogin(
         password
       );
 
-    localStorage.setItem(
-      "userName",
-      result.user.display_name
+    if (!result?.user) {
+      throw new Error(
+        "The login response did not contain an advisor account."
+      );
+    }
+
+    updateRememberedEmail(
+      email
     );
 
-    localStorage.setItem(
-      "userEmail",
-      result.user.email
+    saveUserDisplayData(
+      result.user
     );
 
-    localStorage.setItem(
-      "userRole",
-      result.user.role
-    );
+    loginElement(
+      "password"
+    ).value = "";
 
     window.location.replace(
-      "dashboard.html"
+      getSafeNextPage()
     );
+
   } catch (error) {
-    showLoginError(
-      error.message ??
-      "Unable to sign in."
+    let message =
+      error.message
+      ?? "Unable to sign in.";
+
+    if (error.status === 401) {
+      message =
+        "The email or password is incorrect.";
+    } else if (error.status === 0) {
+      message =
+        (
+          "Unable to reach the AdvisorFlow Backend. "
+          + "Check that the Backend is running."
+        );
+    } else if (error.status === 422) {
+      message =
+        "Enter a valid email and password.";
+    }
+
+    showLoginMessage(
+      message,
+      "error"
     );
+
+    loginElement(
+      "password"
+    ).select();
+
   } finally {
     setLoginLoading(false);
   }
@@ -101,32 +583,106 @@ async function handleLogin(
 
 async function redirectSignedInUser() {
   try {
-    await apiGetCurrentUser();
+    const result =
+      await apiGetCurrentUser();
+
+    if (!result?.user) {
+      return false;
+    }
+
+    saveUserDisplayData(
+      result.user
+    );
 
     window.location.replace(
-      "dashboard.html"
+      getSafeNextPage()
     );
+
+    return true;
+
   } catch (error) {
-    // User is not signed in.
+    return false;
   }
+}
+
+
+function initializeLoginEvents() {
+  loginElement(
+    "loginForm"
+  )?.addEventListener(
+    "submit",
+    handleLogin
+  );
+
+  loginElement(
+    "togglePasswordButton"
+  )?.addEventListener(
+    "click",
+    togglePasswordVisibility
+  );
+
+  loginElement(
+    "useDemoAccountButton"
+  )?.addEventListener(
+    "click",
+    fillDemoAccount
+  );
+
+  const passwordInput =
+    loginElement("password");
+
+  passwordInput?.addEventListener(
+    "keydown",
+    updateCapsLockWarning
+  );
+
+  passwordInput?.addEventListener(
+    "keyup",
+    updateCapsLockWarning
+  );
+
+  passwordInput?.addEventListener(
+    "blur",
+    () => {
+      const warning =
+        loginElement(
+          "capsLockWarning"
+        );
+
+      if (warning) {
+        warning.hidden = true;
+      }
+    }
+  );
 }
 
 
 document.addEventListener(
   "DOMContentLoaded",
   async () => {
-    await redirectSignedInUser();
+    showLoginReason();
+    loadRememberedEmail();
+    initializeLoginEvents();
 
-    const form =
-      document.getElementById(
-        "loginForm"
-      );
+    checkBackendStatus();
 
-    if (form) {
-      form.addEventListener(
-        "submit",
-        handleLogin
-      );
+    const redirected =
+      await redirectSignedInUser();
+
+    if (redirected) {
+      return;
+    }
+
+    const emailInput =
+      loginElement("email");
+
+    const passwordInput =
+      loginElement("password");
+
+    if (emailInput?.value) {
+      passwordInput?.focus();
+    } else {
+      emailInput?.focus();
     }
   }
 );

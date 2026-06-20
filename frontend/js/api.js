@@ -479,38 +479,163 @@ async function apiDeleteClient(
   );
 }
 
-async function apiGetPartners(filters = {}) {
-  const parameters = new URLSearchParams();
+async function apiGetPartners(
+  filters = {}
+) {
+  const parameters =
+    new URLSearchParams();
 
-  if (filters.search) parameters.set("search", filters.search);
-  if (filters.specialty) parameters.set("specialty", filters.specialty);
-  if (filters.status) parameters.set("status", filters.status);
+  if (filters.search) {
+    parameters.set(
+      "search",
+      filters.search
+    );
+  }
 
-  const query = parameters.toString();
+  if (filters.specialty) {
+    parameters.set(
+      "specialty",
+      filters.specialty
+    );
+  }
 
-  return apiRequest(query ? `/partners?${query}` : "/partners");
+  if (filters.status) {
+    parameters.set(
+      "status",
+      filters.status
+    );
+  }
+
+  const query =
+    parameters.toString();
+
+  return apiRequest(
+    query
+      ? `/partners?${query}`
+      : "/partners"
+  );
 }
 
-async function apiGetPartner(partnerId) {
-  return apiRequest(`/partners/${encodeURIComponent(partnerId)}`);
+
+async function apiGetPartner(
+  partnerId
+) {
+  return apiRequest(
+    `/partners/${encodeURIComponent(
+      partnerId
+    )}`
+  );
 }
 
-async function apiCreatePartner(partnerData) {
-  return apiRequest("/partners", {
-    method: "POST",
-    body: partnerData,
-  });
+
+async function apiCreatePartner(
+  partnerData
+) {
+  return apiRequest(
+    "/partners",
+    {
+      method: "POST",
+      body: partnerData
+    }
+  );
 }
 
-async function apiUpdatePartner(partnerId, partnerData) {
-  return apiRequest(`/partners/${encodeURIComponent(partnerId)}`, {
-    method: "PATCH",
-    body: partnerData,
-  });
+
+async function apiUpdatePartner(
+  partnerId,
+  partnerData
+) {
+  return apiRequest(
+    `/partners/${encodeURIComponent(
+      partnerId
+    )}`,
+    {
+      method: "PATCH",
+      body: partnerData
+    }
+  );
 }
 
-async function apiDeletePartner(partnerId) {
-  return apiRequest(`/partners/${encodeURIComponent(partnerId)}`, {
-    method: "DELETE",
-  });
+
+async function apiDeletePartner(
+  partnerId
+) {
+  return apiRequest(
+    `/partners/${encodeURIComponent(
+      partnerId
+    )}`,
+    {
+      method: "DELETE"
+    }
+  );
+}
+
+
+async function apiGeneratePartnerMatch(
+  clientId,
+  notes = ""
+) {
+  return apiRequest(
+    "/partner-matching/recommend",
+    {
+      method: "POST",
+      body: {
+        client_id: clientId,
+        notes
+      }
+    }
+  );
+}
+
+
+async function apiGetReferrals(
+  filters = {}
+) {
+  const parameters =
+    new URLSearchParams();
+
+  if (filters.status) {
+    parameters.set(
+      "status",
+      filters.status
+    );
+  }
+
+  const query =
+    parameters.toString();
+
+  return apiRequest(
+    query
+      ? `/referrals?${query}`
+      : "/referrals"
+  );
+}
+
+
+async function apiCreateReferral(
+  referralData
+) {
+  return apiRequest(
+    "/referrals",
+    {
+      method: "POST",
+      body: referralData
+    }
+  );
+}
+
+
+async function apiUpdateReferral(
+  referralId,
+  referralData
+) {
+  return apiRequest(
+    `/referrals/${encodeURIComponent(
+      referralId
+    )}`,
+    {
+      method: "PATCH",
+      body: referralData
+    }
+  );
 }

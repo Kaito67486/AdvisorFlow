@@ -20,6 +20,26 @@ from meeting_workflow import (
     router as meeting_workflow_router,
 )
 
+from partner_workflow import (
+    router as partner_workflow_router,
+)
+
+from dashboard_workflow import (
+    router as dashboard_workflow_router,
+)
+
+from client_ai import (
+    router as client_ai_router,
+)
+
+from meeting_workflow import (
+    router as meeting_workflow_router,
+)
+
+from partner_workflow import (
+    router as partner_workflow_router,
+)
+
 
 from fastapi import (
     Depends,
@@ -42,8 +62,8 @@ from sqlalchemy.orm import (
 
 from advisor_engine import (
     generate_ai_brief,
-    generate_partner_recommendation,
 )
+
 from ai_provider import get_ai_provider
 from database import Base, engine, get_db
 from dependencies import get_current_advisor
@@ -98,6 +118,7 @@ ALLOWED_HTML_PAGES = {
     "meeting",
     "partner", 
     "logout",
+    "index"
 }
 
 
@@ -148,6 +169,10 @@ app.include_router(
 
 app.include_router(
     dashboard_workflow_router
+)
+
+app.include_router(
+    partner_workflow_router
 )
 
 if not FRONTEND_DIR.exists():
@@ -1077,42 +1102,6 @@ def generate_brief(
     )
 
 
-
-@app.post(
-    "/partner-recommendation"
-)
-def partner_recommendation(
-    data: dict,
-    _advisor: Advisor = Depends(
-        get_current_advisor,
-    ),
-):
-    client = data.get("client")
-
-    if not isinstance(
-        client,
-        dict,
-    ):
-        raise HTTPException(
-            status_code=(
-                status
-                .HTTP_422_UNPROCESSABLE_ENTITY
-            ),
-            detail=(
-                "A client object is required."
-            ),
-        )
-
-    notes = str(
-        data.get("notes", "")
-    )
-
-    return (
-        generate_partner_recommendation(
-            client,
-            notes,
-        )
-    )
 
 
 

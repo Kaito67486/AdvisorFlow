@@ -8,56 +8,152 @@
     content="width=device-width, initial-scale=1.0"
   />
 
-  <title>AdvisorFlow | Logout</title>
+  <meta
+    name="description"
+    content="Sign out of the AdvisorFlow advisor workspace."
+  />
+
+  <title>AdvisorFlow | Sign Out</title>
 
   <link
     rel="stylesheet"
     href="css/style.css"
   />
+
+  <link
+    rel="stylesheet"
+    href="css/auth.css"
+  />
 </head>
 
-<body class="logout-page">
-  <main class="logout-container">
-    <section class="logout-card">
-      <div class="logout-icon">
+<body class="auth-page logout-screen">
+  <div
+    class="auth-decoration auth-decoration-one"
+    aria-hidden="true"
+  ></div>
+
+  <div
+    class="auth-decoration auth-decoration-two"
+    aria-hidden="true"
+  ></div>
+
+  <main class="logout-shell">
+    <a
+      class="logout-brand"
+      href="dashboard.html"
+      aria-label="Return to AdvisorFlow"
+    >
+      <span class="auth-brand-logo">
         AF
+      </span>
+
+      <span>
+        <strong>AdvisorFlow</strong>
+        <small>Advisor Command Center</small>
+      </span>
+    </a>
+
+    <section class="modern-logout-card">
+      <div class="logout-symbol">
+        <span aria-hidden="true">
+          ↗
+        </span>
       </div>
 
-      <h1>Logout</h1>
-
-      <p>
-        Are you sure you want to log out
-        of AdvisorFlow?
+      <p class="auth-card-label">
+        End advisor session
       </p>
 
-      <div class="logout-user-information">
-        <p>Signed in as</p>
+      <h1>Sign out of AdvisorFlow?</h1>
 
-        <strong id="logoutUserName">
-          Advisor
-        </strong>
+      <p class="logout-description">
+        You will need to enter your email and password
+        again before accessing client information.
+      </p>
 
-        <span id="logoutUserEmail"></span>
+      <section class="logout-account-card">
+        <div
+          id="logoutUserAvatar"
+          class="logout-user-avatar"
+        >
+          AD
+        </div>
+
+        <div class="logout-user-details">
+          <span>Currently signed in as</span>
+
+          <strong id="logoutUserName">
+            Loading advisor...
+          </strong>
+
+          <p id="logoutUserEmail">
+            Loading account...
+          </p>
+
+          <span
+            id="logoutUserRole"
+            class="logout-role-badge"
+          >
+            Advisor
+          </span>
+        </div>
+      </section>
+
+      <div class="logout-information">
+        <span aria-hidden="true">
+          ✓
+        </span>
+
+        <p>
+          Signing out removes the AdvisorFlow session from
+          this browser. Your saved clients, meetings and
+          referrals remain safely stored.
+        </p>
       </div>
 
-      <div class="logout-actions">
-        <button
-          id="confirmLogoutButton"
-          class="confirm-logout-button"
-          type="button"
-        >
-          Yes, Logout
-        </button>
+      <div
+        id="logoutMessage"
+        class="auth-message error"
+        role="alert"
+        aria-live="assertive"
+        hidden
+      ></div>
 
+      <div class="modern-logout-actions">
         <button
           id="cancelLogoutButton"
-          class="cancel-logout-button"
+          class="logout-cancel-button"
           type="button"
         >
-          Cancel
+          Return to AdvisorFlow
+        </button>
+
+        <button
+          id="confirmLogoutButton"
+          class="logout-confirm-button"
+          type="button"
+        >
+          <span id="logoutButtonText">
+            Sign Out
+          </span>
+
+          <span
+            id="logoutButtonSpinner"
+            class="auth-button-spinner light"
+            aria-hidden="true"
+            hidden
+          ></span>
         </button>
       </div>
+
+      <p class="logout-keyboard-hint">
+        Press Esc to return without signing out.
+      </p>
     </section>
+
+    <p class="logout-footer">
+      AdvisorFlow secure advisor workspace
+    </p>
   </main>
 
   <script src="js/api.js"></script>

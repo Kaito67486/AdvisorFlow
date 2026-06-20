@@ -10,7 +10,15 @@
 
   <title>AdvisorFlow | Partners</title>
 
-  <link rel="stylesheet" href="css/style.css" />
+  <link
+    rel="stylesheet"
+    href="css/style.css"
+  />
+
+  <link
+    rel="stylesheet"
+    href="css/partner.css"
+  />
 </head>
 
 <body>
@@ -22,126 +30,184 @@
         </div>
 
         <nav>
-          <a href="dashboard.html">Dashboard</a>
-          <a href="client.html">Clients</a>
-          <a href="meeting.html">Meeting Notes</a>
-          <a class="active" href="partner.html">Partners</a>
+          <a href="dashboard.html">
+            Dashboard
+          </a>
+
+          <a href="client.html">
+            Clients
+          </a>
+
+          <a href="meeting.html">
+            Meeting Notes
+          </a>
+
+          <a
+            class="active"
+            href="partner.html"
+          >
+            Partners
+          </a>
         </nav>
       </div>
 
-      <a href="logout.html" class="logout-button">
+      <a
+        href="logout.html"
+        class="logout-button"
+      >
         Logout
       </a>
     </aside>
 
-    <main class="main-content">
-      <header class="topbar">
+    <main class="main-content partner-page">
+      <header class="topbar partner-topbar">
         <div>
+          <p class="partner-page-label">
+            Partnership Ecosystem
+          </p>
+
           <h1>Partners</h1>
+
           <p>
-            Search, manage and open partner profiles.
+            Manage your partner directory, match clients
+            with suitable partners, and track referrals.
           </p>
         </div>
 
-        <div class="topbar-actions">
-          <div id="profileName" class="profile-pill">
+        <div class="partner-header-actions">
+          <div
+            id="profileName"
+            class="profile-pill"
+          >
             Advisor
           </div>
 
           <button
-            id="generateSelectedButton"
+            id="openPartnerDialogButton"
             class="primary-btn"
             type="button"
           >
-            Generate Recommendation
+            + Add Partner
           </button>
         </div>
       </header>
 
       <div
         id="partnerPageMessage"
-        class="client-page-message"
+        class="partner-page-message"
         role="status"
         hidden
       ></div>
 
-      <section class="client-filter-bar">
-        <div class="client-filter-field client-search-field">
-          <label for="partnerClientSearch">
-            Search
-          </label>
+      <section class="partner-kpi-grid">
+        <article class="partner-kpi-card">
+          <span>Active Partners</span>
+          <strong id="activePartnerCount">0</strong>
+          <small>Available for matching</small>
+        </article>
 
-          <input
-            id="partnerClientSearch"
-            type="search"
-            placeholder="Search client name, occupation or goal..."
-          />
-        </div>
+        <article class="partner-kpi-card">
+          <span>Specialties</span>
+          <strong id="partnerSpecialtyCount">0</strong>
+          <small>Areas of expertise</small>
+        </article>
 
-        <div class="client-filter-field">
-          <label for="partnerRiskFilter">
-            Risk Profile
-          </label>
+        <article class="partner-kpi-card">
+          <span>Referral Drafts</span>
+          <strong id="draftReferralCount">0</strong>
+          <small>Awaiting advisor review</small>
+        </article>
 
-          <select id="partnerRiskFilter">
-            <option value="all">All Risk Profiles</option>
-            <option value="Conservative">Conservative</option>
-            <option value="Medium">Moderate</option>
-            <option value="Aggressive">Growth</option>
-            <option value="Growth">Growth</option>
-          </select>
-        </div>
-
-        <div class="client-filter-field">
-          <label for="partnerPriorityFilter">
-            Priority
-          </label>
-
-          <select id="partnerPriorityFilter">
-            <option value="all">All Priorities</option>
-            <option value="High">High</option>
-            <option value="Normal">Medium</option>
-            <option value="Medium">Medium</option>
-            <option value="Low">Low</option>
-          </select>
-        </div>
-
-        <button
-          id="clearPartnerFilters"
-          class="clear-filter-button"
-          type="button"
-        >
-          Clear
-        </button>
+        <article class="partner-kpi-card">
+          <span>Total Referrals</span>
+          <strong id="totalReferralCount">0</strong>
+          <small>Saved referral records</small>
+        </article>
       </section>
 
-      <section class="panel clients-panel">
-        <div class="clients-heading">
+      <section class="panel partner-directory-panel">
+        <div class="partner-section-header">
           <div>
             <h2>Partner Directory</h2>
-            <p id="partnerClientResultCount">
-              Loading clients...
+
+            <p id="partnerResultCount">
+              Loading partners...
             </p>
           </div>
         </div>
 
-        <div class="client-table-wrapper">
-          <table class="client-directory-table">
+        <div class="partner-filter-grid">
+          <div class="partner-filter-field partner-filter-search">
+            <label for="partnerSearch">
+              Search
+            </label>
+
+            <input
+              id="partnerSearch"
+              type="search"
+              placeholder="Search partner, specialty, contact or service..."
+            />
+          </div>
+
+          <div class="partner-filter-field">
+            <label for="partnerSpecialtyFilter">
+              Specialty
+            </label>
+
+            <select id="partnerSpecialtyFilter">
+              <option value="all">
+                All Specialties
+              </option>
+            </select>
+          </div>
+
+          <div class="partner-filter-field">
+            <label for="partnerStatusFilter">
+              Status
+            </label>
+
+            <select id="partnerStatusFilter">
+              <option value="all">
+                All Statuses
+              </option>
+
+              <option value="ACTIVE">
+                Active
+              </option>
+
+              <option value="INACTIVE">
+                Inactive
+              </option>
+            </select>
+          </div>
+
+          <button
+            id="clearPartnerFiltersButton"
+            class="clear-filter-button"
+            type="button"
+          >
+            Clear
+          </button>
+        </div>
+
+        <div class="partner-table-wrapper">
+          <table class="partner-directory-table">
             <thead>
               <tr>
                 <th>Partner</th>
+                <th>Type</th>
                 <th>Specialty</th>
-                <th>Partner Type</th>
                 <th>Best For</th>
+                <th>Response</th>
                 <th>Status</th>
-                <th></th>
+                <th>Actions</th>
               </tr>
             </thead>
 
-            <tbody id="partnerClientTableBody">
+            <tbody id="partnerTableBody">
               <tr>
-                <td colspan="6">
-                  Loading clients...
+                <td colspan="7">
+                  Loading partners...
                 </td>
               </tr>
             </tbody>
@@ -149,139 +215,434 @@
         </div>
 
         <div
-          id="emptyPartnerClientMessage"
-          class="empty-client-message"
+          id="emptyPartnerMessage"
+          class="partner-empty-state"
           hidden
         >
-          <h3>No clients found</h3>
+          <h3>No partners found</h3>
 
           <p>
-            Try changing your search or filters.
+            Add a partner or change the current filters.
           </p>
         </div>
       </section>
 
-      <section
-        id="recommendationSection"
-        class="partner-recommendation-layout"
-        hidden
-      >
-        <section class="partner-result-card">
-          <div class="partner-result-header">
+      <section class="partner-matching-layout">
+        <section class="panel partner-match-form-card">
+          <div class="partner-section-header">
             <div>
-              <span class="badge success">
-                Best Match
-              </span>
-
-              <h2 id="partnerName">
-                —
-              </h2>
-
-              <p id="partnerDescription">
-                —
-              </p>
-            </div>
-
-            <div class="match-score">
-              <h1 id="partnerScore">
-                —
-              </h1>
-
-              <p>Match Score</p>
-            </div>
-          </div>
-
-          <div class="partner-client-summary">
-            <h3>Selected Client</h3>
-
-            <div class="partner-client-grid">
-              <p>
-                <strong>Name</strong>
-                <span id="selectedClientName">—</span>
-              </p>
+              <h2>Client Partner Match</h2>
 
               <p>
-                <strong>Occupation</strong>
-                <span id="selectedClientOccupation">—</span>
-              </p>
-
-              <p>
-                <strong>Risk Profile</strong>
-                <span id="selectedClientRisk">—</span>
-              </p>
-
-              <p>
-                <strong>Priority</strong>
-                <span id="selectedClientPriority">—</span>
-              </p>
-
-              <p class="partner-client-goal">
-                <strong>Financial Goal</strong>
-                <span id="selectedClientGoal">—</span>
+                Uses the client profile, confirmed meeting
+                needs, and your live partner directory.
               </p>
             </div>
           </div>
 
-          <div class="partner-reason-block">
-            <h3>Why This Partner?</h3>
+          <div class="partner-match-form">
+            <div class="partner-form-field">
+              <label for="matchingClient">
+                Client
+              </label>
 
-            <ul id="partnerReason" class="insight-list">
-              <li>
-                Generate a recommendation to see reasons.
-              </li>
-            </ul>
-          </div>
+              <select
+                id="matchingClient"
+                required
+              >
+                <option value="">
+                  Loading clients...
+                </option>
+              </select>
+            </div>
 
-          <div class="partner-next-step">
-            <h3>Recommended Next Step</h3>
+            <div class="partner-form-field">
+              <label for="matchingNotes">
+                Additional Context
+                <span class="partner-optional-label">
+                  Optional
+                </span>
+              </label>
 
-            <p id="partnerNextStep">
-              Select a client and generate a recommendation.
-            </p>
+              <textarea
+                id="matchingNotes"
+                maxlength="5000"
+                placeholder="Example: Client wants estate planning support and prefers a fast response."
+              ></textarea>
+            </div>
 
             <button
-              id="createReferralButton"
+              id="generatePartnerMatchButton"
               class="primary-btn"
               type="button"
             >
-              Create Referral
+              Generate Partner Match
             </button>
           </div>
         </section>
 
-        <section class="panel">
-          <div class="clients-heading">
-            <div>
-              <h2>Alternative Partners</h2>
-
-              <p id="alternativePartnerCount">
-                Compare other suitable partners.
-              </p>
+        <section
+          id="partnerMatchResult"
+          class="partner-match-result-card"
+        >
+          <div class="partner-match-placeholder">
+            <div class="partner-match-icon">
+              MATCH
             </div>
-          </div>
 
-          <table>
+            <h2>No recommendation yet</h2>
+
+            <p>
+              Select a client and generate a match.
+            </p>
+          </div>
+        </section>
+      </section>
+
+      <section
+        id="alternativePartnersPanel"
+        class="panel"
+        hidden
+      >
+        <div class="partner-section-header">
+          <div>
+            <h2>Alternative Partners</h2>
+
+            <p id="alternativePartnerCount">
+              Compare other active partners.
+            </p>
+          </div>
+        </div>
+
+        <div class="partner-table-wrapper">
+          <table class="partner-alternative-table">
             <thead>
               <tr>
                 <th>Partner</th>
                 <th>Specialty</th>
                 <th>Match</th>
+                <th>Main Reason</th>
                 <th></th>
               </tr>
             </thead>
 
-            <tbody id="otherPartnerTableBody">
+            <tbody id="alternativePartnerTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="panel partner-referral-panel">
+        <div class="partner-section-header">
+          <div>
+            <h2>Referral History</h2>
+
+            <p>
+              Review saved drafts and update referral progress.
+            </p>
+          </div>
+        </div>
+
+        <div class="partner-table-wrapper">
+          <table class="partner-referral-table">
+            <thead>
               <tr>
-                <td colspan="4">
-                  Generate a recommendation first.
+                <th>Created</th>
+                <th>Client</th>
+                <th>Partner</th>
+                <th>Match</th>
+                <th>Status</th>
+                <th>Notes</th>
+              </tr>
+            </thead>
+
+            <tbody id="referralTableBody">
+              <tr>
+                <td colspan="6">
+                  Loading referrals...
                 </td>
               </tr>
             </tbody>
           </table>
-        </section>
+        </div>
       </section>
     </main>
   </div>
+
+  <dialog
+    id="partnerDialog"
+    class="partner-dialog"
+  >
+    <form
+      id="partnerForm"
+      class="partner-form"
+    >
+      <header class="partner-dialog-header">
+        <div>
+          <h2 id="partnerDialogTitle">
+            Add Partner
+          </h2>
+
+          <p>
+            Save partner information into PostgreSQL.
+          </p>
+        </div>
+
+        <button
+          id="closePartnerDialogButton"
+          class="partner-dialog-close"
+          type="button"
+          aria-label="Close partner form"
+        >
+          ×
+        </button>
+      </header>
+
+      <div class="partner-form-grid">
+        <div class="partner-form-field partner-form-full">
+          <label for="partnerNameInput">
+            Partner Name
+            <span>*</span>
+          </label>
+
+          <input
+            id="partnerNameInput"
+            name="name"
+            type="text"
+            maxlength="180"
+            required
+          />
+        </div>
+
+        <div class="partner-form-field">
+          <label for="partnerTypeInput">
+            Partner Type
+            <span>*</span>
+          </label>
+
+          <select
+            id="partnerTypeInput"
+            name="partner_type"
+            required
+          >
+            <option value="Insurance">
+              Insurance
+            </option>
+
+            <option value="Investment">
+              Investment
+            </option>
+
+            <option value="Legal">
+              Legal
+            </option>
+
+            <option value="Tax">
+              Tax & Accounting
+            </option>
+
+            <option value="Lending">
+              Property & Lending
+            </option>
+
+            <option value="Healthcare">
+              Healthcare
+            </option>
+
+            <option value="Other">
+              Other
+            </option>
+          </select>
+        </div>
+
+        <div class="partner-form-field">
+          <label for="partnerSpecialtyInput">
+            Specialty
+            <span>*</span>
+          </label>
+
+          <input
+            id="partnerSpecialtyInput"
+            name="specialty"
+            type="text"
+            maxlength="240"
+            placeholder="Example: Retirement income planning"
+            required
+          />
+        </div>
+
+        <div class="partner-form-field partner-form-full">
+          <label for="partnerBestForInput">
+            Best For
+          </label>
+
+          <input
+            id="partnerBestForInput"
+            name="best_for"
+            type="text"
+            maxlength="3000"
+            placeholder="Example: Conservative retirees and income protection"
+          />
+        </div>
+
+        <div class="partner-form-field partner-form-full">
+          <label for="partnerDescriptionInput">
+            Description
+          </label>
+
+          <textarea
+            id="partnerDescriptionInput"
+            name="description"
+            maxlength="5000"
+            placeholder="Describe the partner's services and strengths."
+          ></textarea>
+        </div>
+
+        <div class="partner-form-field">
+          <label for="partnerContactNameInput">
+            Contact Person
+          </label>
+
+          <input
+            id="partnerContactNameInput"
+            name="contact_name"
+            type="text"
+            maxlength="160"
+          />
+        </div>
+
+        <div class="partner-form-field">
+          <label for="partnerEmailInput">
+            Email
+          </label>
+
+          <input
+            id="partnerEmailInput"
+            name="email"
+            type="email"
+            maxlength="255"
+          />
+        </div>
+
+        <div class="partner-form-field">
+          <label for="partnerPhoneInput">
+            Phone
+          </label>
+
+          <input
+            id="partnerPhoneInput"
+            name="phone"
+            type="tel"
+            maxlength="60"
+          />
+        </div>
+
+        <div class="partner-form-field">
+          <label for="partnerWebsiteInput">
+            Website
+          </label>
+
+          <input
+            id="partnerWebsiteInput"
+            name="website"
+            type="url"
+            maxlength="500"
+            placeholder="https://example.com"
+          />
+        </div>
+
+        <div class="partner-form-field">
+          <label for="partnerServiceAreaInput">
+            Service Area
+          </label>
+
+          <input
+            id="partnerServiceAreaInput"
+            name="service_area"
+            type="text"
+            maxlength="240"
+            placeholder="Example: Kuala Lumpur and Selangor"
+          />
+        </div>
+
+        <div class="partner-form-field">
+          <label for="partnerResponseDaysInput">
+            Response Time
+            <span class="partner-optional-label">
+              days
+            </span>
+          </label>
+
+          <input
+            id="partnerResponseDaysInput"
+            name="response_time_days"
+            type="number"
+            min="0"
+            max="365"
+          />
+        </div>
+
+        <div class="partner-form-field partner-form-full">
+          <label for="partnerKeywordsInput">
+            Matching Keywords
+          </label>
+
+          <input
+            id="partnerKeywordsInput"
+            name="keywords"
+            type="text"
+            placeholder="retirement, conservative, protection, estate"
+          />
+
+          <small>
+            Separate keywords with commas.
+          </small>
+        </div>
+
+        <div class="partner-form-field">
+          <label for="partnerStatusInput">
+            Status
+          </label>
+
+          <select
+            id="partnerStatusInput"
+            name="status"
+          >
+            <option value="ACTIVE">
+              Active
+            </option>
+
+            <option value="INACTIVE">
+              Inactive
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <p
+        id="partnerFormMessage"
+        class="partner-form-message"
+        hidden
+      ></p>
+
+      <footer class="partner-dialog-actions">
+        <button
+          id="cancelPartnerDialogButton"
+          class="secondary-btn"
+          type="button"
+        >
+          Cancel
+        </button>
+
+        <button
+          id="savePartnerButton"
+          class="primary-btn"
+          type="submit"
+        >
+          Save Partner
+        </button>
+      </footer>
+    </form>
+  </dialog>
 
   <script src="js/api.js"></script>
   <script src="js/auth.js"></script>

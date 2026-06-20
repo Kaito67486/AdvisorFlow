@@ -8,87 +8,335 @@
     content="width=device-width, initial-scale=1.0"
   />
 
-  <title>AdvisorFlow | Login</title>
+  <meta
+    name="description"
+    content="AdvisorFlow secure advisor workspace login."
+  />
+
+  <title>AdvisorFlow | Sign In</title>
 
   <link
     rel="stylesheet"
     href="css/style.css"
   />
+
+  <link
+    rel="stylesheet"
+    href="css/auth.css"
+  />
 </head>
 
-<body class="auth-body">
-  <main class="auth-container">
-    <section class="auth-card">
-      <div class="brand">
-        <div class="brand-logo">
+<body class="auth-page login-screen">
+  <div
+    class="auth-decoration auth-decoration-one"
+    aria-hidden="true"
+  ></div>
+
+  <div
+    class="auth-decoration auth-decoration-two"
+    aria-hidden="true"
+  ></div>
+
+  <main class="auth-shell">
+    <section class="auth-hero">
+      <a
+        class="auth-brand"
+        href="index.html"
+        aria-label="AdvisorFlow home"
+      >
+        <span class="auth-brand-logo">
           AF
-        </div>
+        </span>
 
-        <div>
-          <h1>AdvisorFlow</h1>
+        <span class="auth-brand-text">
+          <strong>AdvisorFlow</strong>
+          <small>Advisor Command Center</small>
+        </span>
+      </a>
 
-          <p>
-            Your AI Meeting Agent for
-            Financial Advisors
-          </p>
+      <div class="auth-hero-content">
+        <p class="auth-eyebrow">
+          AI-POWERED ADVISOR WORKSPACE
+        </p>
+
+        <h1>
+          Start every client conversation prepared.
+        </h1>
+
+        <p class="auth-hero-description">
+          Bring client memory, meeting preparation,
+          follow-up actions and partner visibility into
+          one secure workspace.
+        </p>
+
+        <div class="auth-feature-list">
+          <article class="auth-feature">
+            <span class="auth-feature-icon">
+              01
+            </span>
+
+            <div>
+              <h2>Client Memory</h2>
+
+              <p>
+                Review client goals, meetings and unfinished
+                actions before every conversation.
+              </p>
+            </div>
+          </article>
+
+          <article class="auth-feature">
+            <span class="auth-feature-icon">
+              02
+            </span>
+
+            <div>
+              <h2>AI Meeting Support</h2>
+
+              <p>
+                Turn notes and recordings into structured,
+                advisor-reviewed summaries.
+              </p>
+            </div>
+          </article>
+
+          <article class="auth-feature">
+            <span class="auth-feature-icon">
+              03
+            </span>
+
+            <div>
+              <h2>Proactive Follow-ups</h2>
+
+              <p>
+                Keep meetings, tasks and referral work visible
+                from one dashboard.
+              </p>
+            </div>
+          </article>
         </div>
       </div>
 
-      <form
-        id="loginForm"
-        class="auth-form"
-      >
-        <label for="email">
-          Email
-        </label>
+      <div class="auth-hero-footer">
+        <span class="auth-security-indicator">
+          <i aria-hidden="true"></i>
+          Secure advisor session
+        </span>
 
-        <input
-          id="email"
-          name="email"
-          type="email"
-          placeholder="alex@advisorflow.com"
-          autocomplete="email"
-          required
-        />
+        <span>
+          AdvisorFlow MVP
+        </span>
+      </div>
+    </section>
 
-        <label for="password">
-          Password
-        </label>
+    <section class="auth-form-side">
+      <div class="auth-login-card">
+        <div class="auth-mobile-brand">
+          <span class="auth-brand-logo">
+            AF
+          </span>
 
-        <input
-          id="password"
-          name="password"
-          type="password"
-          placeholder="Enter your password"
-          autocomplete="current-password"
-          required
-        />
+          <div>
+            <strong>AdvisorFlow</strong>
+            <small>Advisor Command Center</small>
+          </div>
+        </div>
 
-        <p
-          id="loginError"
-          class="error-message"
+        <div class="auth-card-header">
+          <div>
+            <p class="auth-card-label">
+              Welcome back
+            </p>
+
+            <h2>Sign in to AdvisorFlow</h2>
+
+            <p>
+              Access your live client and meeting workspace.
+            </p>
+          </div>
+
+          <div
+            id="backendStatus"
+            class="auth-service-status checking"
+            aria-live="polite"
+          >
+            <span></span>
+            Checking service
+          </div>
+        </div>
+
+        <div
+          id="loginNotice"
+          class="auth-message info"
+          role="status"
           aria-live="polite"
-        ></p>
+          hidden
+        ></div>
 
-        <button
-          id="loginButton"
-          type="submit"
-          class="primary-btn"
+        <form
+          id="loginForm"
+          class="modern-auth-form"
+          novalidate
         >
-          Login
-        </button>
-      </form>
+          <div class="auth-field">
+            <label for="email">
+              Email address
+            </label>
 
-      <div class="demo-note">
-        <p>
-          <strong>Demo email:</strong>
-          alex@advisorflow.com
-        </p>
+            <div class="auth-input-wrapper">
+              <span
+                class="auth-input-prefix"
+                aria-hidden="true"
+              >
+                @
+              </span>
 
-        <p>
-          <strong>Password:</strong>
-          advisor123
-        </p>
+              <input
+                id="email"
+                name="email"
+                type="email"
+                maxlength="255"
+                inputmode="email"
+                autocomplete="email"
+                autocapitalize="none"
+                spellcheck="false"
+                placeholder="alex@advisorflow.com"
+                required
+              />
+            </div>
+          </div>
+
+          <div class="auth-field">
+            <div class="auth-label-row">
+              <label for="password">
+                Password
+              </label>
+
+              <span class="auth-password-hint">
+                Minimum 6 characters
+              </span>
+            </div>
+
+            <div class="auth-input-wrapper">
+              <span
+                class="auth-input-prefix"
+                aria-hidden="true"
+              >
+                ●
+              </span>
+
+              <input
+                id="password"
+                name="password"
+                type="password"
+                minlength="6"
+                maxlength="128"
+                autocomplete="current-password"
+                placeholder="Enter your password"
+                required
+              />
+
+              <button
+                id="togglePasswordButton"
+                class="auth-password-toggle"
+                type="button"
+                aria-label="Show password"
+                aria-pressed="false"
+              >
+                Show
+              </button>
+            </div>
+
+            <p
+              id="capsLockWarning"
+              class="auth-caps-warning"
+              hidden
+            >
+              Caps Lock is on.
+            </p>
+          </div>
+
+          <div class="auth-form-options">
+            <label class="auth-checkbox-label">
+              <input
+                id="rememberEmail"
+                type="checkbox"
+              />
+
+              <span>
+                Remember my email
+              </span>
+            </label>
+
+            <span class="auth-access-help">
+              Need access? Contact your administrator.
+            </span>
+          </div>
+
+          <div
+            id="loginError"
+            class="auth-message error"
+            role="alert"
+            aria-live="assertive"
+            hidden
+          ></div>
+
+          <button
+            id="loginButton"
+            class="auth-submit-button"
+            type="submit"
+          >
+            <span id="loginButtonText">
+              Sign In
+            </span>
+
+            <span
+              id="loginButtonSpinner"
+              class="auth-button-spinner"
+              aria-hidden="true"
+              hidden
+            ></span>
+          </button>
+        </form>
+
+        <div class="auth-divider">
+          <span>Demo access</span>
+        </div>
+
+        <section class="auth-demo-card">
+          <div>
+            <span class="auth-demo-label">
+              Demo Advisor
+            </span>
+
+            <strong>
+              alex@advisorflow.com
+            </strong>
+
+            <small>
+              Password: advisor123
+            </small>
+          </div>
+
+          <button
+            id="useDemoAccountButton"
+            type="button"
+          >
+            Use demo
+          </button>
+        </section>
+
+        <footer class="auth-card-footer">
+          <span class="auth-lock-icon">
+            ✓
+          </span>
+
+          <p>
+            Your password is sent only to the AdvisorFlow
+            Backend for verification. It is never stored in
+            the browser.
+          </p>
+        </footer>
       </div>
     </section>
   </main>
