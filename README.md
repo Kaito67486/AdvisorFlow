@@ -2,6 +2,18 @@
 
 AdvisorFlow is an AI-powered advisor workspace that helps financial advisors manage clients, prepare for meetings, create structured meeting summaries, track follow-up tasks, discover suitable partners, and manage referrals.
 
+## Team
+
+**Team Name:** Tonight Beat Tiger
+
+| Name | Role |
+|---|---|
+| Chong Yong Shen | Team Leader |
+| Ong Jia Jie | Team Member |
+| Fang Jian Xun | Team Member |
+| Rayment Choong Seng Tuck | Team Member |
+| Leong Kai Wen | Team Member |
+
 The project was created for a hackathon based on the idea of improving advisor productivity, client attention, client memory, morning preparation, proactive follow-ups, and partnership ecosystem visibility.
 
 ---
