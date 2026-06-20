@@ -14,6 +14,141 @@ AdvisorFlow is an AI-powered advisor workspace that helps financial advisors man
 | Rayment Choong Seng Tuck | Team Member |
 | Leong Kai Wen | Team Member |
 
+## Challenge and Approach
+
+Financial advisors often manage client information across different places, such as meeting notes, calendars, emails, spreadsheets, and personal reminders. This makes it difficult to prepare for meetings, remember important client details, complete follow-up tasks, and find the right professional partner for a client.
+
+The main challenge was not only storing information, but turning it into useful actions without removing the advisor’s control.
+
+We designed AdvisorFlow around five key challenges.
+
+### 1. Scattered client information
+
+**Challenge:**
+Client goals, risk profiles, meeting notes, tasks, and follow-up dates are often stored separately. Advisors may spend too much time searching for information before a meeting.
+
+**Approach:**
+We created a central Client Memory in PostgreSQL. Each client profile connects to their meetings, confirmed summaries, action items, follow-up tasks, and important background information.
+
+This gives the advisor one place to understand the client’s current situation.
+
+### 2. Time-consuming meeting documentation
+
+**Challenge:**
+Writing and organizing meeting notes manually takes time. Raw notes may also be incomplete or difficult to review later.
+
+**Approach:**
+AdvisorFlow allows the advisor to type notes or record a meeting with participant consent. The recording is temporarily sent for transcription and is discarded after the transcript is returned.
+
+The AI then converts the raw notes into structured information:
+
+* Meeting summary
+* Client needs
+* Action items
+* Suggested next follow-up date
+* Follow-up reason
+
+The original notes are still saved, so the advisor can compare them with the generated result.
+
+### 3. AI output may be inaccurate
+
+**Challenge:**
+AI can misunderstand meeting notes or generate information that was not actually discussed. Automatically saving AI output as final client information would create a trust and accuracy risk.
+
+**Approach:**
+We added a human-review workflow:
+
+```text
+Raw Notes
+→ AI Summary
+→ Advisor Review
+→ Advisor Edit
+→ Advisor Confirmation
+→ Follow-up Tasks
+```
+
+The advisor can edit the summary, client needs, action items, and follow-up date. Follow-up tasks are only created after the advisor confirms the final result.
+
+This makes AI an assistant instead of an automatic decision-maker.
+
+### 4. Missed meetings and follow-ups
+
+**Challenge:**
+Advisors may forget an upcoming meeting, an overdue task, or an important high-priority client.
+
+**Approach:**
+We built a live dashboard using real PostgreSQL data.
+
+The dashboard displays:
+
+* Meetings for the selected date
+* Pending follow-ups
+* Overdue tasks
+* High-priority clients
+* Daily preparation priorities
+
+The advisor can also add meetings, open client records, and complete tasks directly from the dashboard.
+
+### 5. Finding suitable professional partners
+
+**Challenge:**
+Advisors may know many external partners, but it can be difficult to remember which partner is suitable for a specific client need.
+
+**Approach:**
+We created a Partner Directory where advisors can add and manage partners, specialties, service areas, contact information, response times, and matching keywords.
+
+AdvisorFlow compares the client’s profile, goals, risk profile, confirmed meeting needs, and action items with active partners in the database.
+
+The system provides:
+
+* A recommended partner
+* A match score
+* Clear matching reasons
+* Alternative partner options
+* A suggested next step
+
+The advisor makes the final decision and can create a referral draft.
+
+### Technical approach
+
+We separated AdvisorFlow into four main layers:
+
+```text
+Frontend
+→ FastAPI Backend
+→ PostgreSQL Database
+→ OpenAI API
+```
+
+The frontend was built with HTML, CSS, and JavaScript. The backend uses FastAPI, Pydantic, and SQLAlchemy. Neon PostgreSQL stores the main application data, while the OpenAI API supports transcription, summaries, client briefs, and the dashboard assistant.
+
+We also separated major backend features into different modules, including:
+
+* Authentication
+* Client management
+* Meeting workflow
+* Dashboard workflow
+* AI provider
+* Partner management
+* Referral tracking
+
+This structure makes the project easier to maintain and allows future features to be added without rebuilding the entire application.
+
+### Final approach
+
+Our final approach was to keep the product focused on one complete workflow:
+
+```text
+Understand the Client
+→ Prepare for the Meeting
+→ Record What Happened
+→ Generate and Review the Summary
+→ Create Follow-up Actions
+→ Recommend a Suitable Partner
+```
+
+Instead of making AI replace the advisor, AdvisorFlow uses AI to organize information, reduce repetitive work, and help the advisor notice what requires attention.
+
 The project was created for a hackathon based on the idea of improving advisor productivity, client attention, client memory, morning preparation, proactive follow-ups, and partnership ecosystem visibility.
 
 ---
