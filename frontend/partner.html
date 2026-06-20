@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+
+  <title>AdvisorFlow | Partners</title>
+
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+
+<body>
+  <div class="app-layout">
+    <aside class="sidebar">
+      <div class="sidebar-top">
+        <div class="sidebar-logo">
+          AdvisorFlow
+        </div>
+
+        <nav>
+          <a href="dashboard.html">Dashboard</a>
+          <a href="client.html">Clients</a>
+          <a href="meeting.html">Meeting Notes</a>
+          <a class="active" href="partner.html">Partners</a>
+        </nav>
+      </div>
+
+      <a href="logout.html" class="logout-button">
+        Logout
+      </a>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div>
+          <h1>Partners</h1>
+          <p>
+            Search, manage and open partner profiles.
+          </p>
+        </div>
+
+        <div class="topbar-actions">
+          <div id="profileName" class="profile-pill">
+            Advisor
+          </div>
+
+          <button
+            id="generateSelectedButton"
+            class="primary-btn"
+            type="button"
+          >
+            Generate Recommendation
+          </button>
+        </div>
+      </header>
+
+      <div
+        id="partnerPageMessage"
+        class="client-page-message"
+        role="status"
+        hidden
+      ></div>
+
+      <section class="client-filter-bar">
+        <div class="client-filter-field client-search-field">
+          <label for="partnerClientSearch">
+            Search
+          </label>
+
+          <input
+            id="partnerClientSearch"
+            type="search"
+            placeholder="Search client name, occupation or goal..."
+          />
+        </div>
+
+        <div class="client-filter-field">
+          <label for="partnerRiskFilter">
+            Risk Profile
+          </label>
+
+          <select id="partnerRiskFilter">
+            <option value="all">All Risk Profiles</option>
+            <option value="Conservative">Conservative</option>
+            <option value="Medium">Moderate</option>
+            <option value="Aggressive">Growth</option>
+            <option value="Growth">Growth</option>
+          </select>
+        </div>
+
+        <div class="client-filter-field">
+          <label for="partnerPriorityFilter">
+            Priority
+          </label>
+
+          <select id="partnerPriorityFilter">
+            <option value="all">All Priorities</option>
+            <option value="High">High</option>
+            <option value="Normal">Medium</option>
+            <option value="Medium">Medium</option>
+            <option value="Low">Low</option>
+          </select>
+        </div>
+
+        <button
+          id="clearPartnerFilters"
+          class="clear-filter-button"
+          type="button"
+        >
+          Clear
+        </button>
+      </section>
+
+      <section class="panel clients-panel">
+        <div class="clients-heading">
+          <div>
+            <h2>Partner Directory</h2>
+            <p id="partnerClientResultCount">
+              Loading clients...
+            </p>
+          </div>
+        </div>
+
+        <div class="client-table-wrapper">
+          <table class="client-directory-table">
+            <thead>
+              <tr>
+                <th>Partner</th>
+                <th>Specialty</th>
+                <th>Partner Type</th>
+                <th>Best For</th>
+                <th>Status</th>
+                <th></th>
+              </tr>
+            </thead>
+
+            <tbody id="partnerClientTableBody">
+              <tr>
+                <td colspan="6">
+                  Loading clients...
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div
+          id="emptyPartnerClientMessage"
+          class="empty-client-message"
+          hidden
+        >
+          <h3>No clients found</h3>
+
+          <p>
+            Try changing your search or filters.
+          </p>
+        </div>
+      </section>
+
+      <section
+        id="recommendationSection"
+        class="partner-recommendation-layout"
+        hidden
+      >
+        <section class="partner-result-card">
+          <div class="partner-result-header">
+            <div>
+              <span class="badge success">
+                Best Match
+              </span>
+
+              <h2 id="partnerName">
+                —
+              </h2>
+
+              <p id="partnerDescription">
+                —
+              </p>
+            </div>
+
+            <div class="match-score">
+              <h1 id="partnerScore">
+                —
+              </h1>
+
+              <p>Match Score</p>
+            </div>
+          </div>
+
+          <div class="partner-client-summary">
+            <h3>Selected Client</h3>
+
+            <div class="partner-client-grid">
+              <p>
+                <strong>Name</strong>
+                <span id="selectedClientName">—</span>
+              </p>
+
+              <p>
+                <strong>Occupation</strong>
+                <span id="selectedClientOccupation">—</span>
+              </p>
+
+              <p>
+                <strong>Risk Profile</strong>
+                <span id="selectedClientRisk">—</span>
+              </p>
+
+              <p>
+                <strong>Priority</strong>
+                <span id="selectedClientPriority">—</span>
+              </p>
+
+              <p class="partner-client-goal">
+                <strong>Financial Goal</strong>
+                <span id="selectedClientGoal">—</span>
+              </p>
+            </div>
+          </div>
+
+          <div class="partner-reason-block">
+            <h3>Why This Partner?</h3>
+
+            <ul id="partnerReason" class="insight-list">
+              <li>
+                Generate a recommendation to see reasons.
+              </li>
+            </ul>
+          </div>
+
+          <div class="partner-next-step">
+            <h3>Recommended Next Step</h3>
+
+            <p id="partnerNextStep">
+              Select a client and generate a recommendation.
+            </p>
+
+            <button
+              id="createReferralButton"
+              class="primary-btn"
+              type="button"
+            >
+              Create Referral
+            </button>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="clients-heading">
+            <div>
+              <h2>Alternative Partners</h2>
+
+              <p id="alternativePartnerCount">
+                Compare other suitable partners.
+              </p>
+            </div>
+          </div>
+
+          <table>
+            <thead>
+              <tr>
+                <th>Partner</th>
+                <th>Specialty</th>
+                <th>Match</th>
+                <th></th>
+              </tr>
+            </thead>
+
+            <tbody id="otherPartnerTableBody">
+              <tr>
+                <td colspan="4">
+                  Generate a recommendation first.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+      </section>
+    </main>
+  </div>
+
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/partner.js"></script>
+</body>
+</html>

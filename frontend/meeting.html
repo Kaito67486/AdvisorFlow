@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+
+  <title>
+    AdvisorFlow | Meeting Assistant
+  </title>
+
+  <link
+    rel="stylesheet"
+    href="css/style.css"
+  />
+
+  <link
+    rel="stylesheet"
+    href="css/meeting-recorder.css"
+  />
+
+  <link
+    rel="stylesheet"
+    href="css/meeting-review.css"
+  />
+</head>
+
+<body>
+  <div class="app-layout">
+    <aside class="sidebar">
+      <div class="sidebar-top">
+        <div class="sidebar-logo">
+          AdvisorFlow
+        </div>
+
+        <nav>
+          <a href="dashboard.html">
+            Dashboard
+          </a>
+
+          <a href="client.html">
+            Clients
+          </a>
+
+          <a
+            class="active"
+            href="meeting.html"
+          >
+            Meeting Notes
+          </a>
+
+          <a href="partner.html">
+            Partners
+          </a>
+        </nav>
+      </div>
+
+      <a
+        href="logout.html"
+        class="logout-button"
+      >
+        Logout
+      </a>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div>
+          <h1>Meeting Assistant</h1>
+
+          <p>
+            Record or type meeting notes, create a meeting,
+            and save an AI summary into Client Memory.
+          </p>
+        </div>
+
+        <div
+          id="profileName"
+          class="profile-pill"
+        >
+          Advisor
+        </div>
+      </header>
+
+      <div
+        id="workflowStatus"
+        class="workflow-status info"
+      >
+        Select a client, enter notes or record audio,
+        then create the meeting.
+      </div>
+
+      <section class="content-grid">
+        <div class="panel">
+          <h2>Meeting Information</h2>
+
+          <div class="meeting-form-grid">
+            <div class="meeting-form-field">
+              <label for="meetingClient">
+                Client
+              </label>
+
+              <select
+                id="meetingClient"
+                required
+              >
+                <option value="">
+                  Loading clients...
+                </option>
+              </select>
+            </div>
+
+            <div class="meeting-form-field">
+              <label for="meetingScheduledAt">
+                Meeting Date and Time
+              </label>
+
+              <input
+                id="meetingScheduledAt"
+                type="datetime-local"
+                required
+              />
+            </div>
+
+            <div
+              class="meeting-form-field meeting-form-field-full"
+            >
+              <label for="meetingTitle">
+                Meeting Title
+              </label>
+
+              <input
+                id="meetingTitle"
+                type="text"
+                maxlength="200"
+                placeholder="Example: Retirement Planning Review"
+                required
+              />
+            </div>
+          </div>
+        </div>
+
+        <div class="panel recording-panel">
+          <h2>Record Meeting</h2>
+
+          <label class="recording-consent">
+            <input
+              id="recordingConsent"
+              type="checkbox"
+            />
+
+            <span>
+              I confirm that the participants have been
+              informed and have consented to this recording
+              being processed for transcription.
+            </span>
+          </label>
+
+          <div class="recording-controls">
+            <button
+              id="startRecordingButton"
+              class="recording-button start"
+              type="button"
+            >
+              Start Recording
+            </button>
+
+            <button
+              id="stopRecordingButton"
+              class="recording-button stop"
+              type="button"
+              disabled
+            >
+              Stop Recording
+            </button>
+
+            <button
+              id="transcribeRecordingButton"
+              class="recording-button transcribe"
+              type="button"
+              disabled
+            >
+              Transcribe Recording
+            </button>
+          </div>
+
+          <div
+            id="recordingTimer"
+            class="recording-timer"
+          >
+            00:00
+          </div>
+
+          <p
+            id="recordingStatus"
+            class="recording-status"
+          >
+            No recording in progress.
+          </p>
+
+          <audio
+            id="audioPreview"
+            class="audio-preview"
+            controls
+            hidden
+          ></audio>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Raw Meeting Notes / Transcript</h2>
+
+        <div class="meeting-form-field">
+          <label for="meetingNotes">
+            Review and edit the transcript before saving
+          </label>
+
+          <textarea
+            id="meetingNotes"
+            maxlength="50000"
+            placeholder="Type notes manually or transcribe a recording. Review the transcript carefully before creating the meeting."
+          ></textarea>
+        </div>
+
+        <div class="workflow-actions">
+          <button
+            id="createMeetingButton"
+            class="primary-btn"
+            type="button"
+          >
+            Create Meeting & Generate AI Summary
+          </button>
+
+          <button
+            id="resetMeetingButton"
+            class="secondary-btn"
+            type="button"
+          >
+            Start New Meeting
+          </button>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>AI Summary Review</h2>
+
+        <div
+          id="summaryOutput"
+          class="ai-box"
+        >
+          The generated summary will appear here for review.
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/meeting.js"></script>
+</body>
+</html>

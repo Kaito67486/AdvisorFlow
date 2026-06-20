@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+
+  <title>AdvisorFlow | Logout</title>
+
+  <link
+    rel="stylesheet"
+    href="css/style.css"
+  />
+</head>
+
+<body class="logout-page">
+  <main class="logout-container">
+    <section class="logout-card">
+      <div class="logout-icon">
+        AF
+      </div>
+
+      <h1>Logout</h1>
+
+      <p>
+        Are you sure you want to log out
+        of AdvisorFlow?
+      </p>
+
+      <div class="logout-user-information">
+        <p>Signed in as</p>
+
+        <strong id="logoutUserName">
+          Advisor
+        </strong>
+
+        <span id="logoutUserEmail"></span>
+      </div>
+
+      <div class="logout-actions">
+        <button
+          id="confirmLogoutButton"
+          class="confirm-logout-button"
+          type="button"
+        >
+          Yes, Logout
+        </button>
+
+        <button
+          id="cancelLogoutButton"
+          class="cancel-logout-button"
+          type="button"
+        >
+          Cancel
+        </button>
+      </div>
+    </section>
+  </main>
+
+  <script src="js/api.js"></script>
+  <script src="js/logout.js"></script>
+</body>
+</html>

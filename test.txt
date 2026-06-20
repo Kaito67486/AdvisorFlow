@@ -1,0 +1,1512 @@
+/backend/advisor_engine.py
+
+def generate_ai_brief(client):
+
+    age = client.get("age", 0)
+    occupation = client.get("occupation", "")
+    risk = client.get("riskProfile", "Medium")
+    goal = client.get("goal", "")
+    last = client.get("lastMeeting", "")
+    priority = client.get("priority", "Normal")
+
+    focus = []
+
+    # 🧠 1. GOAL inference (if keyword exists)
+    if goal:
+        if "retirement" in goal.lower():
+            focus.append("Discuss retirement income planning")
+        elif "education" in goal.lower():
+            focus.append("Discuss education funding strategy")
+        else:
+            focus.append(f"Review financial goal: {goal}")
+
+    # 🧠 2. AGE-based inference (NO keyword needed)
+    if age >= 50:
+        focus.append("Focus on retirement readiness and wealth preservation")
+    elif age >= 30:
+        focus.append("Focus on wealth accumulation strategy")
+    else:
+        focus.append("Focus on early-stage financial planning")
+
+    # 🧠 3. OCCUPATION inference (VERY IMPORTANT fallback)
+    if occupation:
+        if "business" in occupation.lower():
+            focus.append("Review business asset protection strategy")
+        elif "engineer" in occupation.lower():
+            focus.append("Optimize structured investment planning")
+        else:
+            focus.append(f"Align financial strategy with profession: {occupation}")
+
+    # 🧠 4. RISK fallback (always works even if missing data)
+    if risk == "Conservative":
+        product = "Recommend low-risk financial products"
+    elif risk == "Aggressive":
+        product = "Recommend high-growth investment products"
+    else:
+        product = "Recommend balanced financial portfolio"
+
+    # 🧠 5. LAST MEETING fallback
+    if last:
+        focus.append(f"Follow up on previous discussion: {last}")
+    else:
+        focus.append("Establish initial financial profiling discussion")
+
+    # 🧠 6. PRIORITY fallback
+    urgency = "Standard follow-up cycle"
+    if priority == "High":
+        urgency = "Immediate follow-up required"
+
+    # OUTPUT
+    return {
+        "focus": focus,
+        "product": product,
+        "urgency": urgency
+    }
+
+/backend/main.py
+
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from advisor_engine import generate_ai_brief
+
+app = FastAPI()
+
+# frontend connect
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Health check
+@app.get("/")
+def home():
+    return {"message": "AdvisorFlow API running"}
+
+@app.post("/ai-brief")
+def ai_brief(client: dict):
+
+    result = generate_ai_brief(client)
+
+    return {
+        "output": result
+    }
+
+/frontend/css/style.css
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  background: #f4f7fb;
+  color: #172033;
+}
+
+.auth-body {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #071b2f, #0f766e);
+}
+
+.auth-container {
+  width: 100%;
+  max-width: 440px;
+  padding: 24px;
+}
+
+.auth-card {
+  background: white;
+  border-radius: 22px;
+  padding: 32px;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+}
+
+.brand {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  margin-bottom: 28px;
+}
+
+.brand-logo {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: #0f766e;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
+.auth-form {
+  display: grid;
+  gap: 12px;
+}
+
+input, textarea {
+  width: 100%;
+  padding: 14px;
+  border: 1px solid #d8dee9;
+  border-radius: 12px;
+  outline: none;
+}
+
+textarea {
+  min-height: 220px;
+  resize: vertical;
+}
+
+.primary-btn {
+  background: #0f766e;
+  color: white;
+  border: none;
+  padding: 14px 18px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.primary-btn:hover {
+  background: #115e59;
+}
+
+.primary-link {
+  display: inline-block;
+  margin-top: 16px;
+  color: #0f766e;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.demo-note {
+  margin-top: 16px;
+  color: #64748b;
+}
+
+.app-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  width: 250px;
+  background: #071b2f;
+  color: white;
+  padding: 28px 20px;
+}
+
+.sidebar-logo {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 36px;
+}
+
+.sidebar nav {
+  display: grid;
+  gap: 10px;
+}
+
+.sidebar a {
+  color: #cbd5e1;
+  text-decoration: none;
+  padding: 13px 14px;
+  border-radius: 12px;
+}
+
+.sidebar a.active,
+.sidebar a:hover {
+  background: #0f766e;
+  color: white;
+}
+
+.main-content {
+  flex: 1;
+  padding: 32px;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 28px;
+}
+
+.topbar h1 {
+  font-size: 30px;
+  margin-bottom: 6px;
+}
+
+.topbar p {
+  color: #64748b;
+}
+
+.profile-pill {
+  background: white;
+  padding: 12px 18px;
+  border-radius: 999px;
+  box-shadow: 0 8px 24px rgba(15,23,42,0.08);
+}
+
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+  margin-bottom: 24px;
+}
+
+.card, .panel, .partner-card {
+  background: white;
+  border-radius: 18px;
+  padding: 24px;
+  box-shadow: 0 8px 24px rgba(15,23,42,0.08);
+}
+
+.card p {
+  color: #64748b;
+  margin-bottom: 10px;
+}
+
+.card h2 {
+  font-size: 34px;
+}
+
+.content-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.panel h2 {
+  margin-bottom: 16px;
+}
+
+.meeting-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  margin-bottom: 12px;
+  cursor: pointer;
+}
+
+.meeting-item:hover {
+  border-color: #0f766e;
+}
+
+.insight-list {
+  padding-left: 20px;
+  line-height: 1.9;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  text-align: left;
+  padding: 14px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.badge {
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.badge.danger { background: #fee2e2; color: #991b1b; }
+.badge.warning { background: #fef3c7; color: #92400e; }
+.badge.success { background: #dcfce7; color: #166534; }
+
+.info-grid {
+  display: grid;
+  gap: 14px;
+}
+
+.ai-box, .activity-box {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 18px;
+  line-height: 1.7;
+}
+
+.timeline {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+}
+
+.timeline div {
+  border-left: 4px solid #0f766e;
+  padding-left: 14px;
+}
+
+.partner-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.match-score {
+  text-align: center;
+}
+
+.match-score h1 {
+  font-size: 56px;
+  color: #0f766e;
+}
+
+@media (max-width: 900px) {
+  .app-layout {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+  }
+
+  .kpi-grid,
+  .content-grid,
+  .timeline {
+    grid-template-columns: 1fr;
+  }
+
+  .topbar,
+  .partner-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+}
+
+/* Bright AI Theme Override */
+
+.auth-body {
+  background:
+    radial-gradient(circle at 20% 20%, rgba(0, 229, 255, 0.35), transparent 30%),
+    radial-gradient(circle at 80% 80%, rgba(20, 241, 149, 0.28), transparent 35%),
+    linear-gradient(135deg, #071a2d 0%, #0d3b66 45%, #00a8cc 100%);
+}
+
+.auth-card {
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(18px);
+  box-shadow: 0 24px 70px rgba(0, 194, 255, 0.25);
+}
+
+.brand-logo {
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    background: linear-gradient(
+        135deg,
+        #06deff,
+        #11cbb5
+    );
+    color: white;
+}
+
+.primary-btn {
+  background: linear-gradient(135deg, #00c2ff, #14f195);
+  color: #071a2d;
+  box-shadow: 0 0 22px rgba(0, 194, 255, 0.35);
+}
+
+.primary-btn:hover {
+  background: linear-gradient(135deg, #33d4ff, #2fffa8);
+  transform: translateY(-1px);
+}
+
+input:focus,
+textarea:focus {
+  border-color: #00c2ff;
+  box-shadow: 0 8px 20px rgba(15,118,110,.18);
+}
+
+.primary-link {
+  color: #00a8cc;
+}
+
+.sidebar {
+  background: linear-gradient(180deg, #071a2d, #0d3b66);
+}
+
+.sidebar a.active,
+.sidebar a:hover {
+  background: linear-gradient(135deg, #00c2ff, #14f195);
+  color: #071a2d;
+}
+
+.meeting-item:hover {
+  border-color: #00c2ff;
+  box-shadow: 0 8px 24px rgba(0, 194, 255, 0.16);
+}
+
+.timeline div {
+  border-left-color: #00c2ff;
+}
+
+.match-score h1 {
+  color: #00a8cc;
+}
+
+.logout-btn {
+  width: 100%;
+  padding: 13px 16px;
+  background: transparent;
+  color: #fca5a5;
+  border: 1px solid #7f1d1d;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.logout-btn:hover {
+  background: #7f1d1d;
+  color: white;
+}
+
+/* Logout link inside sidebar */
+
+.logout-button {
+  display: block;
+  width: 100%;
+  padding: 13px 16px;
+
+  background: transparent;
+  color: #fca5a5;
+
+  border: 1px solid #7f1d1d;
+  border-radius: 12px;
+
+  text-align: left;
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: bold;
+
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.logout-button:hover {
+  background: #7f1d1d;
+  color: white;
+}
+
+/* Logout confirmation page */
+
+.logout-page {
+  min-height: 100vh;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background:
+    linear-gradient(
+      135deg,
+      #071b2f,
+      #0f766e
+    );
+}
+
+.logout-container {
+  width: 100%;
+  max-width: 480px;
+  padding: 24px;
+}
+
+.logout-card {
+  padding: 36px;
+
+  background: white;
+
+  border-radius: 22px;
+
+  text-align: center;
+
+  box-shadow:
+    0 22px 55px rgba(0, 0, 0, 0.22);
+}
+
+.logout-icon {
+  width: 58px;
+  height: 58px;
+
+  margin: 0 auto 18px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #0f766e;
+  color: white;
+
+  border-radius: 16px;
+
+  font-weight: bold;
+}
+
+.logout-card h1 {
+  margin-bottom: 10px;
+}
+
+.logout-card > p {
+  color: #64748b;
+  line-height: 1.6;
+}
+
+.logout-user-information {
+  margin: 24px 0;
+  padding: 16px;
+
+  display: grid;
+  gap: 5px;
+
+  background: #f8fafc;
+
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+}
+
+.logout-user-information p,
+.logout-user-information span {
+  color: #64748b;
+}
+
+.logout-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.confirm-logout-button,
+.cancel-logout-button {
+  flex: 1;
+
+  padding: 13px 16px;
+
+  border-radius: 12px;
+
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.confirm-logout-button {
+  background: #b91c1c;
+  color: white;
+
+  border: 1px solid #b91c1c;
+}
+
+.confirm-logout-button:hover {
+  background: #991b1b;
+}
+
+.cancel-logout-button {
+  background: white;
+  color: #172033;
+
+  border: 1px solid #cbd5e1;
+}
+
+.cancel-logout-button:hover {
+  background: #f1f5f9;
+}
+
+@media (max-width: 500px) {
+  .logout-actions {
+    flex-direction: column;
+  }
+}
+
+/frontend/js/api.js
+
+// api.js
+// This file handles backend API calls.
+// For now, it returns demo data if backend is not connected.
+
+const API_URL = "http://127.0.0.1:5000";
+
+async function postData(endpoint, data) {
+  try {
+    const response = await fetch(`${API_URL}${endpoint}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(data)
+    });
+
+    if (!response.ok) {
+      throw new Error("Backend error");
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.warn("Backend not connected. Using demo data instead.");
+    return null;
+  }
+}
+
+async function apiGenerateBrief(client) {
+  const result = await postData("/generate-brief", { client });
+
+  if (result) return result;
+
+  return {
+    focus: [
+      "Discuss retirement income planning.",
+      "Recommend conservative financial products.",
+      "Follow up on daughter’s university funding concern.",
+      "Suggest ABC Insurance as a suitable partner."
+    ]
+  };
+}
+
+async function apiGenerateSummary(notes) {
+  const result = await postData("/generate-summary", { notes });
+
+  if (result) return result;
+
+  return {
+    summary: "The client prefers lower-risk investment options and is interested in retirement income planning.",
+    goal: "Build a stable retirement income plan while minimizing exposure to high-risk products.",
+    actions: [
+      "Send retirement product brochure.",
+      "Schedule follow-up meeting next Monday.",
+      "Introduce ABC Insurance partner."
+    ],
+    email: "Dear Alice, thank you for meeting today. Based on our discussion, I will prepare suitable low-risk retirement planning options and share them with you shortly."
+  };
+}
+
+/frontend/js/client.js
+
+// client.js
+
+const client = {
+  name: "Alice Tan",
+  age: 45,
+  occupation: "Business Owner",
+  riskProfile: "Conservative",
+  goal: "Retirement Planning",
+  lastMeeting: "12 June 2026",
+  priority: "High"
+};
+
+function loadClientPage() {
+  const title = document.querySelector(".topbar h1");
+  if (title) title.textContent = client.name;
+}
+
+async function generateBrief() {
+  const aiBrief = document.getElementById("aiBrief");
+
+  if (!aiBrief) return;
+
+  aiBrief.innerHTML = "Generating AI brief...";
+
+  const result = await apiGenerateBrief(client);
+
+  aiBrief.innerHTML = `
+    <h3>Today's Focus</h3>
+    <ul>
+      ${result.focus.map(item => `<li>${item}</li>`).join("")}
+    </ul>
+  `;
+}
+
+document.addEventListener("DOMContentLoaded", loadClientPage);
+
+/frontend/js/dashboard.js
+
+// dashboard.js
+
+const meetings = [
+  {
+    client: "Alice Tan",
+    time: "10:00 AM",
+    topic: "Retirement planning review",
+    page: "client.html"
+  },
+  {
+    client: "John Lim",
+    time: "2:00 PM",
+    topic: "Investment portfolio update",
+    page: "client.html"
+  }
+];
+
+function loadDashboard() {
+  const userName = localStorage.getItem("userName") || "Alex";
+
+  const heading = document.querySelector(".topbar h1");
+  if (heading) {
+    heading.textContent = `Good Morning, ${userName} 👋`;
+  }
+
+  const profile = document.querySelector(".profile-pill");
+  if (profile) {
+    profile.textContent = userName;
+  }
+
+  renderMeetings();
+}
+
+function renderMeetings() {
+  const meetingContainer = document.getElementById("meetingList");
+
+  if (!meetingContainer) return;
+
+  meetingContainer.innerHTML = "";
+
+  meetings.forEach(meeting => {
+    const item = document.createElement("div");
+    item.className = "meeting-item";
+    item.onclick = () => {
+      window.location.href = meeting.page;
+    };
+
+    item.innerHTML = `
+      <div>
+        <h3>${meeting.client}</h3>
+        <p>${meeting.topic}</p>
+      </div>
+      <span>${meeting.time}</span>
+    `;
+
+    meetingContainer.appendChild(item);
+  });
+}
+
+function logout() {
+  localStorage.clear();
+  window.location.href = "index.html";
+}
+
+document.addEventListener("DOMContentLoaded", loadDashboard);
+
+/frontend/js/login.js
+
+// js/login.js
+
+const demoAccounts = [
+  {
+    email: "alex@advisorflow.com",
+    password: "advisor123",
+    name: "Alex",
+    role: "Senior Advisor"
+  },
+  {
+    email: "sarah@advisorflow.com",
+    password: "advisor123",
+    name: "Sarah",
+    role: "Financial Advisor"
+  },
+  {
+    email: "manager@advisorflow.com",
+    password: "advisor123",
+    name: "Manager",
+    role: "Team Leader"
+  },
+  {
+    email: "admin@advisorflow.com",
+    password: "admin123",
+    name: "Administrator",
+    role: "Admin"
+  }
+];
+
+function saveLoggedInUser(user) {
+  localStorage.setItem("isLoggedIn", "true");
+  localStorage.setItem("userName", user.name);
+  localStorage.setItem("userEmail", user.email);
+  localStorage.setItem("userRole", user.role);
+}
+
+function showLoginError(message) {
+  const errorElement =
+    document.getElementById("loginError");
+
+  if (errorElement) {
+    errorElement.textContent = message;
+  }
+}
+
+function handleLogin(event) {
+  event.preventDefault();
+
+  const emailInput =
+    document.getElementById("email");
+
+  const passwordInput =
+    document.getElementById("password");
+
+  const email =
+    emailInput.value.trim().toLowerCase();
+
+  const password =
+    passwordInput.value;
+
+  showLoginError("");
+
+  if (!email || !password) {
+    showLoginError(
+      "Please enter your email and password."
+    );
+
+    return;
+  }
+
+  const matchedUser = demoAccounts.find(
+    account =>
+      account.email.toLowerCase() === email &&
+      account.password === password
+  );
+
+  if (!matchedUser) {
+    showLoginError(
+      "Invalid email or password."
+    );
+
+    return;
+  }
+
+  saveLoggedInUser(matchedUser);
+
+  window.location.replace("dashboard.html");
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+  const alreadyLoggedIn =
+    localStorage.getItem("isLoggedIn") === "true";
+
+  if (alreadyLoggedIn) {
+    window.location.replace("dashboard.html");
+
+    return;
+  }
+
+  const loginForm =
+    document.getElementById("loginForm");
+
+  if (loginForm) {
+    loginForm.addEventListener(
+      "submit",
+      handleLogin
+    );
+  }
+});
+
+/frontend/js/logout.js
+
+// js/logout.js
+
+function displayLogoutUser() {
+  const userName =
+    localStorage.getItem("userName") || "Advisor";
+
+  const userEmail =
+    localStorage.getItem("userEmail") || "";
+
+  const nameElement =
+    document.getElementById("logoutUserName");
+
+  const emailElement =
+    document.getElementById("logoutUserEmail");
+
+  if (nameElement) {
+    nameElement.textContent = userName;
+  }
+
+  if (emailElement) {
+    emailElement.textContent = userEmail;
+  }
+}
+
+function confirmLogout() {
+  localStorage.removeItem("isLoggedIn");
+  localStorage.removeItem("userName");
+  localStorage.removeItem("userEmail");
+  localStorage.removeItem("userRole");
+
+  window.location.replace("index.html");
+}
+
+function cancelLogout() {
+  window.location.href = "dashboard.html";
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+  displayLogoutUser();
+
+  const confirmButton =
+    document.getElementById("confirmLogoutButton");
+
+  const cancelButton =
+    document.getElementById("cancelLogoutButton");
+
+  if (confirmButton) {
+    confirmButton.addEventListener(
+      "click",
+      confirmLogout
+    );
+  }
+
+  if (cancelButton) {
+    cancelButton.addEventListener(
+      "click",
+      cancelLogout
+    );
+  }
+});
+
+/frontend/js/meeting.js
+
+// meeting.js
+
+async function generateSummary() {
+  const notesInput = document.getElementById("meetingNotes");
+  const output = document.getElementById("summaryOutput");
+  const activity = document.getElementById("agentActivity");
+
+  if (!notesInput || !output) return;
+
+  const notes = notesInput.value.trim();
+
+  if (!notes) {
+    alert("Please enter meeting notes first.");
+    return;
+  }
+
+  if (activity) {
+    activity.innerHTML = `
+      <p>✓ Retrieved client history</p>
+      <p>✓ Analysed meeting notes</p>
+      <p>✓ Identified client goal</p>
+      <p>✓ Generated follow-up actions</p>
+    `;
+  }
+
+  output.innerHTML = "Generating summary...";
+
+  const result = await apiGenerateSummary(notes);
+
+  output.innerHTML = `
+    <h3>Meeting Summary</h3>
+    <p>${result.summary}</p>
+
+    <h3>Client Goal</h3>
+    <p>${result.goal}</p>
+
+    <h3>Action Items</h3>
+    <ul>
+      ${result.actions.map(action => `<li>${action}</li>`).join("")}
+    </ul>
+
+    <h3>Suggested Email</h3>
+    <p>${result.email}</p>
+
+    <a href="partner.html" class="primary-link">View Partner Recommendation →</a>
+  `;
+}
+
+function clearNotes() {
+  const notesInput = document.getElementById("meetingNotes");
+  const output = document.getElementById("summaryOutput");
+  const activity = document.getElementById("agentActivity");
+
+  if (notesInput) notesInput.value = "";
+  if (output) output.innerHTML = "Your generated summary will appear here.";
+  if (activity) activity.innerHTML = "Waiting for meeting notes...";
+}
+
+/frontend/js/partner.js
+
+// partner.js
+
+const partners = [
+  {
+    name: "ABC Insurance",
+    specialty: "Retirement products",
+    match: 92,
+    reason: [
+      "Highest approval rate for retirement products.",
+      "Strong experience with conservative clients.",
+      "Fast response time for advisor referrals."
+    ]
+  },
+  {
+    name: "SecureLife Group",
+    specialty: "Family protection",
+    match: 81
+  },
+  {
+    name: "WealthBridge",
+    specialty: "Investment advisory",
+    match: 76
+  }
+];
+
+function createReferral() {
+  alert("Referral saved for demo!");
+}
+
+function loadPartnerPage() {
+  const bestPartner = partners[0];
+
+  const partnerName = document.getElementById("partnerName");
+  const partnerScore = document.getElementById("partnerScore");
+  const partnerReason = document.getElementById("partnerReason");
+
+  if (partnerName) partnerName.textContent = bestPartner.name;
+  if (partnerScore) partnerScore.textContent = `${bestPartner.match}%`;
+
+  if (partnerReason) {
+    partnerReason.innerHTML = bestPartner.reason
+      .map(reason => `<li>${reason}</li>`)
+      .join("");
+  }
+}
+
+document.addEventListener("DOMContentLoaded", loadPartnerPage);
+
+/frontend/client.html
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AdvisorFlow | Client Profile</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div class="app-layout">
+    <aside class="sidebar">
+      <div class="sidebar-logo">AdvisorFlow</div>
+      <nav>
+        <a href="dashboard.html">Dashboard</a>
+        <a class="active" href="client.html">Clients</a>
+        <a href="meeting.html">Meeting Notes</a>
+        <a href="partner.html">Partners</a>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div>
+          <h1>Alice Tan</h1>
+          <p>Client profile and AI meeting preparation.</p>
+        </div>
+        <button class="primary-btn" onclick="generateBrief()">✨ Generate AI Brief</button>
+      </header>
+
+      <section class="content-grid">
+        <div class="panel">
+          <h2>Client Information</h2>
+          <div class="info-grid">
+            <p><strong>Age:</strong> 45</p>
+            <p><strong>Occupation:</strong> Business Owner</p>
+            <p><strong>Risk Profile:</strong> Conservative</p>
+            <p><strong>Investment Goal:</strong> Retirement Planning</p>
+            <p><strong>Last Meeting:</strong> 12 June 2026</p>
+            <p><strong>Priority:</strong> High</p>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h2>AI Brief</h2>
+          <div id="aiBrief" class="ai-box">
+            Click “Generate AI Brief” to prepare for the meeting.
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Client Timeline</h2>
+        <div class="timeline">
+          <div><strong>2024</strong><p>Bought insurance plan.</p></div>
+          <div><strong>2025</strong><p>Started investment review.</p></div>
+          <div><strong>2026</strong><p>Daughter entering university.</p></div>
+          <div><strong>Today</strong><p>Interested in retirement income planning.</p></div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Meeting History</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Topic</th>
+              <th>Outcome</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>12 Jun 2026</td>
+              <td>Retirement Review</td>
+              <td>Requested low-risk options</td>
+            </tr>
+            <tr>
+              <td>18 Mar 2026</td>
+              <td>Education Fund</td>
+              <td>Discussed daughter's university plan</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+    </main>
+  </div>
+
+  <script src="js/api.js"></script>
+  <script src="js/client.js"></script>
+</body>
+</html>
+
+/frontend/dashboard.html
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AdvisorFlow | Dashboard</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div class="app-layout">
+    <aside class="sidebar">
+      <div class="sidebar-top">
+        <div class="sidebar-logo">AdvisorFlow</div>
+
+        <nav>
+          <a class="active" href="dashboard.html">Dashboard</a>
+          <a href="client.html">Clients</a>
+          <a href="meeting.html">Meeting Notes</a>
+          <a href="partner.html">Partners</a>
+        </nav>
+      </div>
+
+      <a href="logout.html" class="logout-button">
+        Logout
+      </a>
+    </aside>
+    <main class="main-content">
+      <header class="topbar">
+        <div>
+          <h1>Good Morning, Admin👋</h1>
+          <p>Here is your advisory workspace for today.</p>
+        </div>
+        <div class="profile-pill">Admin</div>
+      </header>
+
+      <section class="kpi-grid">
+        <div class="card"><p>Total Clients</p><h2>124</h2></div>
+        <div class="card"><p>Today's Meetings</p><h2>5</h2></div>
+        <div class="card"><p>Pending Follow-ups</p><h2>12</h2></div>
+        <div class="card"><p>High Risk Clients</p><h2>3</h2></div>
+      </section>
+
+      <section class="content-grid">
+        <div class="panel">
+          <h2>Today's Meetings</h2>
+          <div class="meeting-item" onclick="location.href='client.html'">
+            <div>
+              <h3>Alice Tan</h3>
+              <p>Retirement planning review</p>
+            </div>
+            <span>10:00 AM</span>
+          </div>
+          <div class="meeting-item">
+            <div>
+              <h3>John Lim</h3>
+              <p>Investment portfolio update</p>
+            </div>
+            <span>2:00 PM</span>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h2>AI Insights</h2>
+          <ul class="insight-list">
+            <li>Alice is interested in retirement planning.</li>
+            <li>Michael requires follow-up after 5 days.</li>
+            <li>ABC Insurance has the best partner match today.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Follow-up Needed</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Client</th>
+              <th>Reason</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Michael Wong</td>
+              <td>Policy renewal</td>
+              <td><span class="badge danger">Overdue</span></td>
+            </tr>
+            <tr>
+              <td>Alice Tan</td>
+              <td>Retirement product email</td>
+              <td><span class="badge warning">Today</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+    </main>
+  </div>
+
+  <script src="js/dashboard.js"></script>
+</body>
+</html>
+
+/frontend/logout.html
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>AdvisorFlow | Logout</title>
+
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body class="logout-page">
+
+  <main class="logout-container">
+
+    <section class="logout-card">
+
+      <div class="logout-icon">
+        AF
+      </div>
+
+      <h1>Logout</h1>
+
+      <p>
+        Are you sure you want to log out of AdvisorFlow?
+      </p>
+
+      <div class="logout-user-information">
+
+        <p>
+          Signed in as
+        </p>
+
+        <strong id="logoutUserName">
+          Advisor
+        </strong>
+
+        <span id="logoutUserEmail"></span>
+
+      </div>
+
+      <div class="logout-actions">
+
+        <button
+          id="confirmLogoutButton"
+          class="confirm-logout-button"
+          type="button"
+        >
+          Yes, Logout
+        </button>
+
+        <button
+          id="cancelLogoutButton"
+          class="cancel-logout-button"
+          type="button"
+        >
+          Cancel
+        </button>
+
+      </div>
+
+    </section>
+
+  </main>
+
+  <script src="js/logout.js"></script>
+
+</body>
+</html>
+
+/frontend/meeting.html
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AdvisorFlow | Meeting Notes</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div class="app-layout">
+    <aside class="sidebar">
+      <div class="sidebar-logo">AdvisorFlow</div>
+      <nav>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="client.html">Clients</a>
+        <a class="active" href="meeting.html">Meeting Notes</a>
+        <a href="partner.html">Partners</a>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div>
+          <h1>Meeting Assistant</h1>
+          <p>Turn raw notes into summaries, action items and emails.</p>
+        </div>
+      </header>
+
+      <section class="content-grid">
+        <div class="panel">
+          <h2>Meeting Notes</h2>
+          <textarea id="meetingNotes" placeholder="Example: Client wants lower-risk investment. Interested in retirement income planning. Concerned about inflation."></textarea>
+          <button class="primary-btn" onclick="generateSummary()">Generate Summary</button>
+        </div>
+
+        <div class="panel">
+          <h2>Agent Activity</h2>
+          <div id="agentActivity" class="activity-box">
+            Waiting for meeting notes...
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>AI Output</h2>
+        <div id="summaryOutput" class="ai-box">
+          Your generated summary will appear here.
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="js/api.js"></script>
+  <script src="js/meeting.js"></script>
+</body>
+</html>
+
+/frontend/partner.html
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AdvisorFlow | Partner Recommendation</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div class="app-layout">
+    <aside class="sidebar">
+      <div class="sidebar-logo">AdvisorFlow</div>
+      <nav>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="client.html">Clients</a>
+        <a href="meeting.html">Meeting Notes</a>
+        <a class="active" href="partner.html">Partners</a>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div>
+          <h1>Partner Recommendation</h1>
+          <p>AI recommends the right partner at the right moment.</p>
+        </div>
+      </header>
+
+      <section class="partner-card">
+        <div>
+          <span class="badge success">Best Match</span>
+          <h2>ABC Insurance</h2>
+          <p>Specializes in retirement products and conservative financial planning solutions.</p>
+        </div>
+
+        <div class="match-score">
+          <h1>92%</h1>
+          <p>Match Score</p>
+        </div>
+      </section>
+
+      <section class="content-grid">
+        <div class="panel">
+          <h2>Why This Partner?</h2>
+          <ul class="insight-list">
+            <li>Highest approval rate for retirement products.</li>
+            <li>Strong experience with conservative clients.</li>
+            <li>Fast response time for advisor referrals.</li>
+          </ul>
+        </div>
+
+        <div class="panel">
+          <h2>Recommended Next Step</h2>
+          <p>Introduce Alice Tan to ABC Insurance for retirement income product consultation.</p>
+          <button class="primary-btn" onclick="alert('Referral saved for demo!')">Create Referral</button>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Other Partners</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Partner</th>
+              <th>Specialty</th>
+              <th>Match</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>SecureLife Group</td>
+              <td>Family protection</td>
+              <td>81%</td>
+            </tr>
+            <tr>
+              <td>WealthBridge</td>
+              <td>Investment advisory</td>
+              <td>76%</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+    </main>
+  </div>
+  <script src="js/partner.js"></script>
+</body>
+</html>

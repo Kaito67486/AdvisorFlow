@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+
+  <title>AdvisorFlow | Dashboard</title>
+
+  <link
+    rel="stylesheet"
+    href="css/style.css"
+  />
+
+  <link
+    rel="stylesheet"
+    href="css/dashboard.css"
+  />
+</head>
+
+<body>
+  <div class="app-layout">
+    <aside class="sidebar">
+      <div class="sidebar-top">
+        <div class="sidebar-logo">
+          AdvisorFlow
+        </div>
+
+        <nav>
+          <a
+            class="active"
+            href="dashboard.html"
+          >
+            Dashboard
+          </a>
+
+          <a href="client.html">
+            Clients
+          </a>
+
+          <a href="meeting.html">
+            Meeting Notes
+          </a>
+
+          <a href="partner.html">
+            Partners
+          </a>
+        </nav>
+      </div>
+
+      <a
+        href="logout.html"
+        class="logout-button"
+      >
+        Logout
+      </a>
+    </aside>
+
+    <main class="main-content dashboard-main">
+      <header class="dashboard-header">
+        <div>
+          <p class="dashboard-label">
+            Advisor Command Center
+          </p>
+
+          <h1 id="welcomeMessage">
+            Good Morning
+          </h1>
+
+          <p id="dashboardSummary">
+            Loading your schedule...
+          </p>
+        </div>
+
+        <div class="dashboard-header-actions">
+          <div
+            id="profileName"
+            class="profile-pill"
+          >
+            Advisor
+          </div>
+
+          <button
+            id="openAddMeetingButton"
+            class="primary-btn"
+            type="button"
+          >
+            + Add Meeting
+          </button>
+        </div>
+      </header>
+
+      <div
+        id="dashboardStatus"
+        class="dashboard-status"
+        hidden
+      ></div>
+
+      <section class="dashboard-kpis">
+        <article class="dashboard-kpi">
+          <span>Meetings</span>
+          <strong id="meetingCount">0</strong>
+          <small>Selected date</small>
+        </article>
+
+        <article class="dashboard-kpi">
+          <span>Pending Follow-ups</span>
+          <strong id="pendingCount">0</strong>
+          <small>All pending tasks</small>
+        </article>
+
+        <article class="dashboard-kpi">
+          <span>Overdue</span>
+          <strong id="overdueCount">0</strong>
+          <small>Need attention</small>
+        </article>
+
+        <article class="dashboard-kpi">
+          <span>High Priority Clients</span>
+          <strong id="highPriorityCount">0</strong>
+          <small>Active clients</small>
+        </article>
+      </section>
+
+      <section class="dashboard-workspace-new">
+        <section class="dashboard-calendar-card">
+          <header class="dashboard-section-header">
+            <div>
+              <h2>Schedule</h2>
+
+              <p id="calendarDateLabel">
+                Loading date...
+              </p>
+            </div>
+
+            <div class="dashboard-calendar-controls">
+              <button
+                id="previousDateButton"
+                type="button"
+                aria-label="Previous date"
+              >
+                ←
+              </button>
+
+              <button
+                id="todayDateButton"
+                class="dashboard-today-button"
+                type="button"
+              >
+                Today
+              </button>
+
+              <button
+                id="nextDateButton"
+                type="button"
+                aria-label="Next date"
+              >
+                →
+              </button>
+
+              <input
+                id="dashboardDateInput"
+                type="date"
+                aria-label="Select dashboard date"
+              />
+            </div>
+          </header>
+
+          <div class="dashboard-calendar-legend">
+            <span>
+              <i class="dashboard-legend-dot meeting"></i>
+              Client Meeting
+            </span>
+
+            <span>
+              <i class="dashboard-legend-dot task"></i>
+              Follow-up Task
+            </span>
+          </div>
+
+          <div
+            id="calendarEventList"
+            class="dashboard-event-list"
+          >
+            <p class="dashboard-empty">
+              Loading schedule...
+            </p>
+          </div>
+        </section>
+
+        <aside class="dashboard-ai-card">
+          <header class="dashboard-ai-header">
+            <div class="dashboard-ai-avatar">
+              AI
+            </div>
+
+            <div>
+              <h2>AI Daily Assistant</h2>
+              <p>
+                Uses your live AdvisorFlow data
+              </p>
+            </div>
+
+            <span class="dashboard-online">
+              Online
+            </span>
+          </header>
+
+          <section class="dashboard-daily-brief">
+            <div class="dashboard-brief-heading">
+              <h3>Priorities</h3>
+
+              <button
+                id="generatePrepButton"
+                type="button"
+              >
+                Ask AI
+              </button>
+            </div>
+
+            <ol id="dailyBriefList">
+              <li>Loading priorities...</li>
+            </ol>
+          </section>
+
+          <div class="dashboard-quick-prompts">
+            <button
+              type="button"
+              data-dashboard-prompt="What should I focus on today?"
+            >
+              Today's focus
+            </button>
+
+            <button
+              type="button"
+              data-dashboard-prompt="Which follow-ups should I do first and why?"
+            >
+              Rank follow-ups
+            </button>
+
+            <button
+              type="button"
+              data-dashboard-prompt="Prepare me for my next client meeting."
+            >
+              Next meeting prep
+            </button>
+          </div>
+
+          <div
+            id="chatMessages"
+            class="dashboard-chat-messages"
+            aria-live="polite"
+          >
+            <div class="dashboard-ai-message">
+              Ask me about your meetings, clients,
+              priorities or follow-up work.
+            </div>
+          </div>
+
+          <form
+            id="dashboardChatForm"
+            class="dashboard-chat-form"
+          >
+            <input
+              id="chatInput"
+              type="text"
+              maxlength="3000"
+              autocomplete="off"
+              placeholder="Ask AdvisorFlow..."
+            />
+
+            <button
+              id="sendChatButton"
+              type="submit"
+            >
+              Send
+            </button>
+          </form>
+        </aside>
+      </section>
+
+      <section class="dashboard-priority-card">
+        <header class="dashboard-section-header">
+          <div>
+            <h2>Priority Follow-ups</h2>
+
+            <p>
+              Pending tasks from confirmed meetings
+              and manual follow-ups
+            </p>
+          </div>
+
+          <a
+            href="client.html"
+            class="dashboard-text-link"
+          >
+            View clients
+          </a>
+        </header>
+
+        <div
+          id="priorityTaskList"
+          class="dashboard-task-list"
+        >
+          <p class="dashboard-empty">
+            Loading follow-ups...
+          </p>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div
+    id="eventPanelOverlay"
+    class="dashboard-panel-overlay"
+  ></div>
+
+  <aside
+    id="eventPanel"
+    class="dashboard-event-panel"
+  >
+    <header class="dashboard-panel-header">
+      <div>
+        <span
+          id="panelKind"
+          class="dashboard-event-kind"
+        >
+          Meeting
+        </span>
+
+        <h2 id="panelTitle">
+          Event
+        </h2>
+      </div>
+
+      <button
+        id="closeEventPanelButton"
+        type="button"
+        aria-label="Close event panel"
+      >
+        ×
+      </button>
+    </header>
+
+    <div class="dashboard-panel-content">
+      <div class="dashboard-detail-row">
+        <span>Client</span>
+        <strong id="panelClient">—</strong>
+      </div>
+
+      <div class="dashboard-detail-row">
+        <span>Time</span>
+        <strong id="panelTime">—</strong>
+      </div>
+
+      <div class="dashboard-detail-row">
+        <span>Priority</span>
+        <strong id="panelPriority">—</strong>
+      </div>
+
+      <section>
+        <h3>Details</h3>
+
+        <p id="panelDescription">
+          —
+        </p>
+      </section>
+
+      <section
+        id="panelClientContextSection"
+      >
+        <h3>Client Context</h3>
+
+        <ul id="panelClientContext"></ul>
+      </section>
+
+      <div class="dashboard-panel-actions">
+        <button
+          id="panelAskAiButton"
+          class="primary-btn"
+          type="button"
+        >
+          Prepare with AI
+        </button>
+
+        <button
+          id="panelOpenClientButton"
+          class="secondary-btn"
+          type="button"
+        >
+          Open Client
+        </button>
+
+        <button
+          id="panelCompleteTaskButton"
+          class="dashboard-complete-button"
+          type="button"
+          hidden
+        >
+          Complete Task
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <dialog
+    id="addMeetingDialog"
+    class="dashboard-meeting-dialog"
+  >
+    <form
+      id="addMeetingForm"
+      class="dashboard-meeting-form"
+    >
+      <header class="dashboard-dialog-header">
+        <div>
+          <h2>Add Client Meeting</h2>
+
+          <p>
+            Schedule a meeting and save it
+            directly into PostgreSQL.
+          </p>
+        </div>
+
+        <button
+          id="closeAddMeetingButton"
+          type="button"
+          aria-label="Close add meeting form"
+        >
+          ×
+        </button>
+      </header>
+
+      <div class="dashboard-form-grid">
+        <div class="dashboard-form-field">
+          <label for="newMeetingClient">
+            Client
+          </label>
+
+          <select
+            id="newMeetingClient"
+            required
+          >
+            <option value="">
+              Loading clients...
+            </option>
+          </select>
+        </div>
+
+        <div class="dashboard-form-field">
+          <label for="newMeetingScheduledAt">
+            Date and Time
+          </label>
+
+          <input
+            id="newMeetingScheduledAt"
+            type="datetime-local"
+            required
+          />
+        </div>
+
+        <div class="dashboard-form-field dashboard-form-full">
+          <label for="newMeetingTitle">
+            Meeting Title
+          </label>
+
+          <input
+            id="newMeetingTitle"
+            type="text"
+            maxlength="200"
+            placeholder="Example: Retirement Planning Review"
+            required
+          />
+        </div>
+
+        <div class="dashboard-form-field dashboard-form-full">
+          <label for="newMeetingNotes">
+            Preparation Notes
+            <span>Optional</span>
+          </label>
+
+          <textarea
+            id="newMeetingNotes"
+            maxlength="50000"
+            placeholder="Add a short agenda or preparation note..."
+          ></textarea>
+        </div>
+      </div>
+
+      <p
+        id="addMeetingMessage"
+        class="dashboard-form-message"
+        hidden
+      ></p>
+
+      <footer class="dashboard-dialog-actions">
+        <button
+          id="cancelAddMeetingButton"
+          class="secondary-btn"
+          type="button"
+        >
+          Cancel
+        </button>
+
+        <button
+          id="saveMeetingButton"
+          class="primary-btn"
+          type="submit"
+        >
+          Save Meeting
+        </button>
+      </footer>
+    </form>
+  </dialog>
+
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/dashboard.js"></script>
+</body>
+</html>

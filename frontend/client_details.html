@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+
+  <title>
+    AdvisorFlow | Client Profile
+  </title>
+
+  <link
+    rel="stylesheet"
+    href="css/style.css"
+  />
+
+  <link
+    rel="stylesheet"
+    href="css/meeting-review.css"
+  />
+
+  <link
+    rel="stylesheet"
+    href="css/client-actions.css"
+  />
+</head>
+
+<body>
+  <div class="app-layout">
+    <aside class="sidebar">
+      <div class="sidebar-top">
+        <div class="sidebar-logo">
+          AdvisorFlow
+        </div>
+
+        <nav>
+          <a href="dashboard.html">
+            Dashboard
+          </a>
+
+          <a
+            class="active"
+            href="client.html"
+          >
+            Clients
+          </a>
+
+          <a href="meeting.html">
+            Meeting Notes
+          </a>
+
+          <a href="partner.html">
+            Partners
+          </a>
+        </nav>
+      </div>
+
+      <a
+        href="logout.html"
+        class="logout-button"
+      >
+        Logout
+      </a>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div>
+          <a
+            href="client.html"
+            class="back-client-link"
+          >
+            ← Back to Clients
+          </a>
+
+          <h1 id="clientName">
+            Loading client...
+          </h1>
+
+          <p>
+            Client profile, meeting history and follow-up tasks.
+          </p>
+        </div>
+
+        <div class="client-action-buttons">
+          <button
+            id="generateClientBrief"
+            class="primary-btn"
+            type="button"
+          >
+            ✨ Generate AI Brief
+          </button>
+
+          <button
+            id="editClientButton"
+            class="secondary-btn"
+            type="button"
+          >
+            Edit Client
+          </button>
+
+          <button
+            id="deleteClientButton"
+            class="danger-btn"
+            type="button"
+          >
+            Delete Client
+          </button>
+        </div>
+      </header>
+
+      <div
+        id="clientDetailsMessage"
+        class="client-details-message"
+        hidden
+      ></div>
+
+      <section class="content-grid">
+        <div class="panel">
+          <h2>Client Information</h2>
+
+          <div class="info-grid">
+            <p>
+              <strong>Email:</strong>
+              <span id="clientEmail">—</span>
+            </p>
+
+            <p>
+              <strong>Phone:</strong>
+              <span id="clientPhone">—</span>
+            </p>
+
+            <p>
+              <strong>Age:</strong>
+              <span id="clientAge">—</span>
+            </p>
+
+            <p>
+              <strong>Occupation:</strong>
+              <span id="clientOccupation">—</span>
+            </p>
+
+            <p>
+              <strong>Risk Profile:</strong>
+              <span id="clientRisk">—</span>
+            </p>
+
+            <p>
+              <strong>Financial Goal:</strong>
+              <span id="clientGoal">—</span>
+            </p>
+
+            <p>
+              <strong>Last Contact:</strong>
+              <span id="clientLastMeeting">—</span>
+            </p>
+
+            <p>
+              <strong>Priority:</strong>
+              <span id="clientPriority">—</span>
+            </p>
+
+            <p>
+              <strong>Status:</strong>
+              <span id="clientStatus">—</span>
+            </p>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h2>AI Brief</h2>
+
+          <div
+            id="clientAiBrief"
+            class="ai-box"
+          >
+            Click “Generate AI Brief” to prepare
+            for the next client interaction.
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Client Timeline</h2>
+
+        <div
+          id="clientTimeline"
+          class="timeline"
+        >
+          <p>Loading timeline...</p>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Meeting History</h2>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Topic</th>
+              <th>Outcome</th>
+            </tr>
+          </thead>
+
+          <tbody id="clientMeetingHistory">
+            <tr>
+              <td colspan="3">
+                Loading meeting history...
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="panel">
+        <h2>Follow-up Tasks</h2>
+
+        <div id="clientTaskList">
+          <p>Loading tasks...</p>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <dialog
+    id="editClientDialog"
+    class="edit-client-dialog"
+  >
+    <form
+      id="editClientForm"
+      class="edit-client-form"
+    >
+      <header class="edit-client-header">
+        <div>
+          <h2>Edit Client</h2>
+
+          <p>
+            Update the client profile stored in PostgreSQL.
+          </p>
+        </div>
+
+        <button
+          id="closeEditClientButton"
+          class="dialog-close-button"
+          type="button"
+        >
+          ×
+        </button>
+      </header>
+
+      <div class="edit-client-grid">
+        <div class="edit-client-field edit-client-full">
+          <label for="editClientFullName">
+            Full Name
+          </label>
+
+          <input
+            id="editClientFullName"
+            type="text"
+            maxlength="160"
+            required
+          />
+        </div>
+
+        <div class="edit-client-field">
+          <label for="editClientEmail">
+            Email
+          </label>
+
+          <input
+            id="editClientEmail"
+            type="email"
+            maxlength="255"
+          />
+        </div>
+
+        <div class="edit-client-field">
+          <label for="editClientPhone">
+            Phone
+          </label>
+
+          <input
+            id="editClientPhone"
+            type="tel"
+            maxlength="50"
+          />
+        </div>
+
+        <div class="edit-client-field">
+          <label for="editClientAge">
+            Age
+          </label>
+
+          <input
+            id="editClientAge"
+            type="number"
+            min="0"
+            max="120"
+          />
+        </div>
+
+        <div class="edit-client-field">
+          <label for="editClientOccupation">
+            Occupation
+          </label>
+
+          <input
+            id="editClientOccupation"
+            type="text"
+            maxlength="160"
+          />
+        </div>
+
+        <div class="edit-client-field">
+          <label for="editClientRisk">
+            Risk Profile
+          </label>
+
+          <select id="editClientRisk">
+            <option value="Conservative">
+              Conservative
+            </option>
+
+            <option value="Medium">
+              Moderate
+            </option>
+
+            <option value="Aggressive">
+              Growth
+            </option>
+          </select>
+        </div>
+
+        <div class="edit-client-field">
+          <label for="editClientPriority">
+            Priority
+          </label>
+
+          <select id="editClientPriority">
+            <option value="High">
+              High
+            </option>
+
+            <option value="Normal">
+              Medium
+            </option>
+
+            <option value="Low">
+              Low
+            </option>
+          </select>
+        </div>
+
+        <div class="edit-client-field">
+          <label for="editClientStatus">
+            Status
+          </label>
+
+          <select id="editClientStatus">
+            <option value="ACTIVE">
+              Active
+            </option>
+
+            <option value="INACTIVE">
+              Inactive
+            </option>
+          </select>
+        </div>
+
+        <div class="edit-client-field edit-client-full">
+          <label for="editClientGoal">
+            Financial Goal
+          </label>
+
+          <textarea
+            id="editClientGoal"
+            maxlength="2000"
+          ></textarea>
+        </div>
+      </div>
+
+      <p
+        id="editClientFormMessage"
+        class="edit-client-message"
+        hidden
+      ></p>
+
+      <footer class="edit-client-actions">
+        <button
+          id="cancelEditClientButton"
+          class="secondary-btn"
+          type="button"
+        >
+          Cancel
+        </button>
+
+        <button
+          id="saveEditClientButton"
+          class="primary-btn"
+          type="submit"
+        >
+          Save Changes
+        </button>
+      </footer>
+    </form>
+  </dialog>
+
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/client.js"></script>
+  <script src="js/client-ai.js"></script>
+  <script src="js/client-actions.js"></script>
+</body>
+</html>

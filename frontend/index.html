@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+
+  <title>AdvisorFlow | Login</title>
+
+  <link
+    rel="stylesheet"
+    href="css/style.css"
+  />
+</head>
+
+<body class="auth-body">
+  <main class="auth-container">
+    <section class="auth-card">
+      <div class="brand">
+        <div class="brand-logo">
+          AF
+        </div>
+
+        <div>
+          <h1>AdvisorFlow</h1>
+
+          <p>
+            Your AI Meeting Agent for
+            Financial Advisors
+          </p>
+        </div>
+      </div>
+
+      <form
+        id="loginForm"
+        class="auth-form"
+      >
+        <label for="email">
+          Email
+        </label>
+
+        <input
+          id="email"
+          name="email"
+          type="email"
+          placeholder="alex@advisorflow.com"
+          autocomplete="email"
+          required
+        />
+
+        <label for="password">
+          Password
+        </label>
+
+        <input
+          id="password"
+          name="password"
+          type="password"
+          placeholder="Enter your password"
+          autocomplete="current-password"
+          required
+        />
+
+        <p
+          id="loginError"
+          class="error-message"
+          aria-live="polite"
+        ></p>
+
+        <button
+          id="loginButton"
+          type="submit"
+          class="primary-btn"
+        >
+          Login
+        </button>
+      </form>
+
+      <div class="demo-note">
+        <p>
+          <strong>Demo email:</strong>
+          alex@advisorflow.com
+        </p>
+
+        <p>
+          <strong>Password:</strong>
+          advisor123
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <script src="js/api.js"></script>
+  <script src="js/login.js"></script>
+</body>
+</html>

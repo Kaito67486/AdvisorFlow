@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+
+  <title>AdvisorFlow | Clients</title>
+
+  <link
+    rel="stylesheet"
+    href="css/style.css"
+  />
+
+  <link
+    rel="stylesheet"
+    href="css/client-form.css"
+  />
+</head>
+
+<body>
+  <div class="app-layout">
+    <aside class="sidebar">
+      <div class="sidebar-top">
+        <div class="sidebar-logo">
+          AdvisorFlow
+        </div>
+
+        <nav>
+          <a href="dashboard.html">
+            Dashboard
+          </a>
+
+          <a
+            class="active"
+            href="client.html"
+          >
+            Clients
+          </a>
+
+          <a href="meeting.html">
+            Meeting Notes
+          </a>
+
+          <a href="partner.html">
+            Partners
+          </a>
+        </nav>
+      </div>
+
+      <a
+        href="logout.html"
+        class="logout-button"
+      >
+        Logout
+      </a>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div>
+          <h1>Clients</h1>
+
+          <p>
+            Search, manage and open client profiles.
+          </p>
+        </div>
+
+        <div class="topbar-actions">
+          <div
+            id="profileName"
+            class="profile-pill"
+          >
+            Advisor
+          </div>
+
+          <button
+            id="openAddClientButton"
+            class="primary-btn add-client-button"
+            type="button"
+          >
+            + Add Client
+          </button>
+        </div>
+      </header>
+
+      <div
+        id="clientPageMessage"
+        class="client-page-message"
+        role="status"
+        hidden
+      ></div>
+
+      <section class="client-filter-bar">
+        <div
+          class="client-filter-field client-search-field"
+        >
+          <label for="clientSearch">
+            Search
+          </label>
+
+          <input
+            id="clientSearch"
+            type="search"
+            placeholder="Search name, occupation or goal..."
+          />
+        </div>
+
+        <div class="client-filter-field">
+          <label for="riskFilter">
+            Risk Profile
+          </label>
+
+          <select id="riskFilter">
+            <option value="all">
+              All Risk Profiles
+            </option>
+
+            <option value="Conservative">
+              Conservative
+            </option>
+
+            <option value="Moderate">
+              Moderate
+            </option>
+
+            <option value="Growth">
+              Growth
+            </option>
+          </select>
+        </div>
+
+        <div class="client-filter-field">
+          <label for="priorityFilter">
+            Priority
+          </label>
+
+          <select id="priorityFilter">
+            <option value="all">
+              All Priorities
+            </option>
+
+            <option value="High">
+              High
+            </option>
+
+            <option value="Medium">
+              Medium
+            </option>
+
+            <option value="Low">
+              Low
+            </option>
+          </select>
+        </div>
+
+        <button
+          id="clearClientFilters"
+          class="clear-filter-button"
+          type="button"
+        >
+          Clear
+        </button>
+      </section>
+
+      <section class="panel clients-panel">
+        <div class="clients-heading">
+          <div>
+            <h2>Client Directory</h2>
+
+            <p id="clientResultCount">
+              Loading clients...
+            </p>
+          </div>
+        </div>
+
+        <div class="client-table-wrapper">
+          <table class="client-directory-table">
+            <thead>
+              <tr>
+                <th>Client</th>
+                <th>Occupation</th>
+                <th>Risk Profile</th>
+                <th>Financial Goal</th>
+                <th>Last Contact</th>
+                <th>Priority</th>
+                <th></th>
+              </tr>
+            </thead>
+
+            <tbody id="clientTableBody">
+              <tr>
+                <td colspan="7">
+                  Loading clients...
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div
+          id="emptyClientMessage"
+          class="empty-client-message"
+          hidden
+        >
+          <h3>No clients found</h3>
+
+          <p>
+            Try changing your search or filters.
+          </p>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <dialog
+    id="addClientDialog"
+    class="client-dialog"
+    aria-labelledby="addClientDialogTitle"
+  >
+    <form
+      id="addClientForm"
+      class="client-form"
+      novalidate
+    >
+      <header class="client-dialog-header">
+        <div>
+          <h2 id="addClientDialogTitle">
+            Add New Client
+          </h2>
+
+          <p>
+            Create a new client profile for the
+            current advisor.
+          </p>
+        </div>
+
+        <button
+          id="closeAddClientButton"
+          class="dialog-close-button"
+          type="button"
+          aria-label="Close add client form"
+        >
+          ×
+        </button>
+      </header>
+
+      <div class="client-form-grid">
+        <div class="client-form-field client-form-field-full">
+          <label for="newClientFullName">
+            Full Name
+            <span aria-hidden="true">*</span>
+          </label>
+
+          <input
+            id="newClientFullName"
+            name="full_name"
+            type="text"
+            maxlength="160"
+            placeholder="Example: Amanda Lee"
+            autocomplete="name"
+            required
+          />
+        </div>
+
+        <div class="client-form-field">
+          <label for="newClientEmail">
+            Email
+          </label>
+
+          <input
+            id="newClientEmail"
+            name="email"
+            type="email"
+            maxlength="255"
+            placeholder="amanda@example.com"
+            autocomplete="email"
+          />
+        </div>
+
+        <div class="client-form-field">
+          <label for="newClientPhone">
+            Phone
+          </label>
+
+          <input
+            id="newClientPhone"
+            name="phone"
+            type="tel"
+            maxlength="50"
+            placeholder="+60 12-345 6789"
+            autocomplete="tel"
+          />
+        </div>
+
+        <div class="client-form-field">
+          <label for="newClientAge">
+            Age
+          </label>
+
+          <input
+            id="newClientAge"
+            name="age"
+            type="number"
+            min="0"
+            max="120"
+            placeholder="40"
+          />
+        </div>
+
+        <div class="client-form-field">
+          <label for="newClientOccupation">
+            Occupation
+          </label>
+
+          <input
+            id="newClientOccupation"
+            name="occupation"
+            type="text"
+            maxlength="160"
+            placeholder="Business Owner"
+          />
+        </div>
+
+        <div class="client-form-field">
+          <label for="newClientRiskProfile">
+            Risk Profile
+          </label>
+
+          <select
+            id="newClientRiskProfile"
+            name="risk_profile"
+          >
+            <option value="Conservative">
+              Conservative
+            </option>
+
+            <option
+              value="Medium"
+              selected
+            >
+              Moderate
+            </option>
+
+            <option value="Aggressive">
+              Growth
+            </option>
+          </select>
+        </div>
+
+        <div class="client-form-field">
+          <label for="newClientPriority">
+            Priority
+          </label>
+
+          <select
+            id="newClientPriority"
+            name="priority"
+          >
+            <option value="High">
+              High
+            </option>
+
+            <option
+              value="Normal"
+              selected
+            >
+              Medium
+            </option>
+
+            <option value="Low">
+              Low
+            </option>
+          </select>
+        </div>
+
+        <div class="client-form-field client-form-field-full">
+          <label for="newClientGoal">
+            Financial Goal
+          </label>
+
+          <textarea
+            id="newClientGoal"
+            name="goal"
+            maxlength="2000"
+            placeholder="Example: Build a retirement income plan within the next ten years."
+          ></textarea>
+        </div>
+      </div>
+
+      <p
+        id="addClientFormMessage"
+        class="client-form-message"
+        role="alert"
+        hidden
+      ></p>
+
+      <footer class="client-dialog-actions">
+        <button
+          id="cancelAddClientButton"
+          class="secondary-btn"
+          type="button"
+        >
+          Cancel
+        </button>
+
+        <button
+          id="saveClientButton"
+          class="primary-btn"
+          type="submit"
+        >
+          Save Client
+        </button>
+      </footer>
+    </form>
+  </dialog>
+
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/client.js"></script>
+</body>
+</html>

@@ -1,0 +1,155 @@
+.meeting-review-message {
+  margin-bottom: 20px;
+  padding: 13px 15px;
+
+  border-radius: 11px;
+
+  line-height: 1.5;
+}
+
+.meeting-review-message.info {
+  color: #075985;
+  background: #e0f2fe;
+  border: 1px solid #bae6fd;
+}
+
+.meeting-review-message.success {
+  color: #166534;
+  background: #dcfce7;
+  border: 1px solid #bbf7d0;
+}
+
+.meeting-review-message.error {
+  color: #991b1b;
+  background: #fee2e2;
+  border: 1px solid #fecaca;
+}
+
+.meeting-review-field {
+  display: grid;
+  gap: 8px;
+
+  margin-bottom: 18px;
+}
+
+.meeting-review-field label {
+  color: #334155;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.meeting-review-field textarea,
+.meeting-review-field input {
+  width: 100%;
+  padding: 13px 14px;
+
+  color: #172033;
+  background: white;
+
+  border: 1px solid #cbd5e1;
+  border-radius: 11px;
+
+  outline: none;
+}
+
+.meeting-review-field textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.meeting-review-field textarea:disabled,
+.meeting-review-field input:disabled {
+  color: #334155;
+  background: #f8fafc;
+
+  cursor: not-allowed;
+}
+
+.meeting-review-field textarea:focus,
+.meeting-review-field input:focus {
+  border-color: #00c2ff;
+
+  box-shadow:
+    0 0 0 3px rgba(0, 194, 255, 0.13);
+}
+
+.meeting-review-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+
+  margin-top: 22px;
+}
+
+.confirmed-task-list {
+  margin-top: 24px;
+  padding: 17px;
+
+  background: #f8fafc;
+
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+}
+
+.confirmed-task-list:empty {
+  display: none;
+}
+
+.confirmed-task-list h3 {
+  margin-bottom: 10px;
+}
+
+.confirmed-task-list ul {
+  padding-left: 21px;
+  line-height: 1.8;
+}
+
+.client-ai-section {
+  margin-top: 18px;
+}
+
+.client-ai-section h3 {
+  margin-bottom: 8px;
+}
+
+.client-ai-section ul {
+  padding-left: 21px;
+  line-height: 1.8;
+}
+
+.client-ai-headline {
+  margin-bottom: 16px;
+  color: #075985;
+}
+
+.client-ai-next-action {
+  margin-top: 20px;
+  padding: 14px;
+
+  background: #ecfeff;
+
+  border: 1px solid #a5f3fc;
+  border-radius: 11px;
+}
+
+.client-ai-next-action h3 {
+  margin-bottom: 6px;
+}
+
+.client-ai-generated-time {
+  display: block;
+
+  margin-top: 14px;
+
+  color: #64748b;
+}
+
+@media (max-width: 700px) {
+  .meeting-review-actions {
+    flex-direction: column;
+  }
+
+  .meeting-review-actions button {
+    width: 100%;
+  }
+}
